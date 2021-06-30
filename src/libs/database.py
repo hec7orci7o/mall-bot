@@ -14,4 +14,5 @@ class DataBase():
             # database = os.environ['DATABASE']   
             database = config('DATABASE')
         )
+        print(os.environ['HOST'])
         self.cursor = self.mydb.cursor()
