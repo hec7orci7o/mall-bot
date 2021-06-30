@@ -24,7 +24,7 @@ class Manage(commands.Cog):
         result = self.database.cursor.fetchall()
 
         # Producto registrado + img disponible
-        if result != [] and url is not None:
+        if result != [] and url != None:
             if is_url(url):
                 sql = """INSERT INTO imagenes (nombre, url) VALUES ('{}', '{}');""".format(val.lower(), url)
                 self.database.cursor.execute(sql)
@@ -33,11 +33,11 @@ class Manage(commands.Cog):
                 await ctx.send("Error > Not a well formed url.")
 
         # Producto registrado + imagen no disponible
-        elif result != [] and url is None:
+        elif result != [] and url == None:
             await ctx.send("Product already exist.")
 
         # Producto no registrado + imagen disponible
-        elif result == [] and url is not None:
+        elif result == [] and url != None:
             sql = """INSERT INTO productos (nombre) VALUES ('{}');""".format(val.lower())
             self.database.cursor.execute(sql)   # Registra el producto { val }
             self.database.mydb.commit()
