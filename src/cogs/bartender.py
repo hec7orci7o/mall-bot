@@ -4,7 +4,7 @@ import asyncio
 import discord
 from discord.ext import commands
 from libs.database import DataBase
-from googletrans import Translator
+# from googletrans import Translator
 
 class Bartender(commands.Cog):
     def __init__(self, bot):
@@ -37,8 +37,8 @@ class Bartender(commands.Cog):
         msg_1 = "Please wait while I prepare your order..."
         msg_2 = f"Here is your {val.lower()}."
 
-        msg_1 = str(self.translator.translate(text=msg_1, dest=self.lang).text)
-        msg_2 = str(self.translator.translate(text=msg_2, dest=self.lang).text)
+        # msg_1 = str(self.translator.translate(text=msg_1, dest=self.lang).text)
+        # msg_2 = str(self.translator.translate(text=msg_2, dest=self.lang).text)
 
         await ctx.trigger_typing()
         embed = discord.Embed(
