@@ -14,7 +14,7 @@ class Bartender(commands.Cog):
         self.database.cursor.execute(sql)
         result = self.database.cursor.fetchall()
 
-        if len(result) == 0:
+        if result == []:
             await ctx.send(f"Sry, there are not products registered with the name: {val.lower()}")
         else:
             # Check disponibilidad del producto registrado
@@ -22,7 +22,7 @@ class Bartender(commands.Cog):
             self.database.cursor.execute(sql)
             result = self.database.cursor.fetchall()
 
-            if len(result) == 0:
+            if result == []:
                 await ctx.send(f"Sry, there are not enought {val.lower()}")
             else:
                 await self.get_item(ctx, val.lower(), result)
