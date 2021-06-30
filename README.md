@@ -8,4 +8,7 @@ mall bot is a discord bot based on a restaurant mall, allowing the user to order
 - [ ] Add a product to a specific shop
 
 ### client
-- [ ] Order a product from a specific shop
+- [x] Order a product from a specific shop
+
+### requirements
+    pip install -r requirements.txt
