@@ -7,6 +7,6 @@ class DataBase():
             host = config('HOST'),
             user= config('USER'),
             password = config('PASS'),
-            database = "centro_comercial"
+            database = config('DATABASE')
         )
         self.cursor = self.mydb.cursor()
