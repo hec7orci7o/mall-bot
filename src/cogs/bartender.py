@@ -10,8 +10,8 @@ class Bartender(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.database = DataBase()
-        self.lang = str(os.environ['LANG']).lower()
-        self.translator = Translator()
+        # self.lang = str(os.environ['LANG']).lower()
+        # self.translator = Translator()
 
     @commands.command(name = 'order')
     async def get_product(self, ctx, val):
