@@ -1,11 +1,17 @@
+import os
+import random
+import asyncio
 import discord
 from discord.ext import commands
 from libs.database import DataBase
+from googletrans import Translator
 
 class Bartender(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.database = DataBase()
+        self.lang = os.environ['LANG']
+        self.translator = Translator()
 
     @commands.command(name = 'order')
     async def get_product(self, ctx, val):
@@ -31,6 +37,9 @@ class Bartender(commands.Cog):
         msg_1 = "Please wait while I prepare your order..."
         msg_2 = f"Here is your {val.lower()}."
 
+        msg_1 = self.translator.translate(text=msg_1, dest=self.lang).text
+        msg_2 = self.translator.translate(text=msg_2, dest=self.lang).text
+
         await ctx.trigger_typing()
         embed = discord.Embed(
             title = f"{msg_1}",
@@ -38,11 +47,12 @@ class Bartender(commands.Cog):
         )
         message = await ctx.send(embed = embed)
         await ctx.trigger_typing()
+        await asyncio.sleep(5)
         embed = discord.Embed (
             title = f"{msg_2}",
             color = 16777215
         )
-        url = result[0][1]
+        url = result[random.randint(0,len(result)-1)][1]
         embed.set_image(url=url)
         await message.delete()
         message = await ctx.send(embed = embed)
