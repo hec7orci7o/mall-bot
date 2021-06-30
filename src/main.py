@@ -29,8 +29,8 @@ client = MallBot(command_prefix='$', help_command=commands.HelpCommand())
 for filename in os.listdir('src/cogs'):
     if filename.endswith('.py'):
         try:
-            print(f'cogs.{filename[:-3]} loaded successfully.')
             client.load_extension(f'cogs.{filename[:-3]}')
+            print(f'cogs.{filename[:-3]} loaded successfully.')
         except:
             print(f'error al cargar el cog {filename[:-3]}')
 
