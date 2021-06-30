@@ -16,41 +16,45 @@ class Manage(commands.Cog):
         self.database = DataBase()
 
     @commands.command()
-    async def insert(self, ctx, val, url=None):
-        # Check producto registrado
-        sql = f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"
-        self.database.cursor.execute(sql)
-        result = self.database.cursor.fetchall()
+    async def insert(self, ctx, val=None, url=None):
+        if val != None:
+            # Check producto registrado
+            sql = f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"
+            self.database.cursor.execute(sql)
+            result = self.database.cursor.fetchall()
 
-        # Producto registrado + img disponible
-        if result != [] and url != None:
-            if is_url(url):
+            # Producto registrado + img disponible
+            if result != [] and url != None:
+                if is_url(url):
+                    sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
+                    self.database.cursor.execute(sql)
+                    await ctx.send(f"New product: {val.lower()}")
+                else:
+                    await ctx.send("Error > Not a well formed url.")
+
+            # Producto registrado + imagen no disponible
+            elif result != [] and url == None:
+                await ctx.send("Product already exist.")
+
+            # Producto no registrado + imagen disponible
+            elif result == [] and url != None:
+                sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
+                self.database.cursor.execute(sql)   # Registra el producto { val }
+                self.database.mydb.commit()
                 sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
-                self.database.cursor.execute(sql)
+                self.database.cursor.execute(sql)   # Registra una img para val
                 await ctx.send(f"New product: {val.lower()}")
+
+            # Producto no registrado + imagen no disponible
             else:
-                await ctx.send("Error > Not a well formed url.")
+                sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
+                self.database.cursor.execute(sql)   # Registra el producto { val }
+                await ctx.send(f"New product: {val.lower()}")
 
-        # Producto registrado + imagen no disponible
-        elif result != [] and url == None:
-            await ctx.send("Product already exist.")
-
-        # Producto no registrado + imagen disponible
-        elif result == [] and url != None:
-            sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
-            self.database.cursor.execute(sql)   # Registra el producto { val }
             self.database.mydb.commit()
-            sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
-            self.database.cursor.execute(sql)   # Registra una img para val
-            await ctx.send(f"New product: {val.lower()}")
-
-        # Producto no registrado + imagen no disponible
         else:
-            sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
-            self.database.cursor.execute(sql)   # Registra el producto { val }
-            await ctx.send(f"New product: {val.lower()}")
+            await ctx.send("The method needs a product")
 
-        self.database.mydb.commit()
 
     @commands.command()
     async def update(self, ctx, val_old, val_new):
@@ -68,10 +72,18 @@ class Manage(commands.Cog):
     
     @commands.command()
     async def erase(self, ctx, val):
-        sql = f"DELETE FROM imagenes WHERE id = {int(val)};"
+        sql = f"SELECT * FROM images WHERE id = '{int(val)}';"
         self.database.cursor.execute(sql)
-        self.database.mydb.commit()
-        await ctx.send(val)
+        result = self.database.cursor.fetchall()
+
+        if result != []:
+            sql = f"DELETE FROM imagenes WHERE id = {int(val)};"
+            self.database.cursor.execute(sql)
+            self.database.mydb.commit()
+            await ctx.send(f"Product with id = {int(val)} deleted successfuly.")
+        else:
+            await ctx.send(f"Error while deleting the product with id: {int(val)}.")
+
 
     @commands.command()
     async def delete(self, ctx, val):
