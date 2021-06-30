@@ -33,17 +33,16 @@ class Bartender(commands.Cog):
         await ctx.trigger_typing()
         embed = discord.Embed(
             title = f"Please wait while I prepare your order...",
-            color = "#fff"
+            color = 16777215
         )
         message = await ctx.send(embed = embed)
-        
         await ctx.trigger_typing()
         await asyncio.sleep(5)
         embed = discord.Embed (
-            title = f"Here is your {}, sir.",
-            color = "#fff"
+            title = f"Here is your {val.lower()}, sir.",
+            color = 16777215
         )
-        url = # seleccionar url de una tupla aleatoria entre todas las de la lista
+        url = "https://img2.pngio.com/botella-agua-png-4-png-image-botella-de-agua-png-800_600.png"
         embed.set_image(url=url)
         await message.delete()
         message = await ctx.send(embed = embed)
