@@ -1,7 +1,7 @@
-import os
 import discord
 from discord.ext import commands
-from decouple import config
+import os
+# from decouple import config
 
 class HelpCommand(commands.HelpCommand):
     def __init__(self):
@@ -34,4 +34,5 @@ for filename in os.listdir('src/cogs'):
         except:
             print(f'error al cargar el cog {filename[:-3]}')
 
-client.run(config('TOKEN'))
+client.run(os.environ['TOKEN'])
+# client.run(config('TOKEN'))
