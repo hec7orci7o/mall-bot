@@ -10,4 +10,5 @@ class DataBase():
             password = os.environ['PASS'],      # password = config('PASS'),  
             database = os.environ['DATABASE']   # database = "centro_comercial"
         )
+        print(os.environ['HOST'])
         self.cursor = self.mydb.cursor()
