@@ -4,13 +4,14 @@ import discord
 from discord.ext import commands
 from libs.database import DataBase
 from googletrans import Translator
-import os
-# from decouple import config
+# import os
+from decouple import config
 
 class Bartender(commands.Cog):
     def __init__(self, bot):
         self.bot  = bot
-        self.lang = os.environ['LANG']  # self.lang = config('LANG')
+        # self.lang = os.environ['LANG']  
+        self.lang = config('LANG')
         self.database   = DataBase()
         self.translator = Translator()
 
@@ -50,7 +51,7 @@ class Bartender(commands.Cog):
             title = f"{self.translator.translate(text=msg_2, dest=self.lang).text}",
             color = 16777215
         )
-        url = result[random.randint(1,len(result))][1]
+        url = result[random.randint(0,len(result)-1)][1]
         embed.set_image(url=url)
         await message.delete()
         message = await ctx.send(embed = embed)
