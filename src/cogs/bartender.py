@@ -10,7 +10,7 @@ class Bartender(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.database = DataBase()
-        self.lang = os.environ['LANG']
+        self.lang = str(os.environ['LANG']).lower()
         self.translator = Translator()
 
     @commands.command(name = 'order')
