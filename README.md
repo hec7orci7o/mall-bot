@@ -1,4 +1,4 @@
-# mall-bot
+# mall-bot V.0
 
 mall bot is a discord bot based on a restaurant mall, allowing the user to order food from different types of restaurants among other things
 
