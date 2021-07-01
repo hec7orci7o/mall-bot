@@ -5,7 +5,6 @@ import discord
 from discord.ext import commands
 from libs.database import DataBase
 import libs.utils as util
-
 # from googletrans import Translator
 
 class Bartender(commands.Cog):
