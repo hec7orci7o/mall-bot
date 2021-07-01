@@ -4,6 +4,8 @@ import asyncio
 import discord
 from discord.ext import commands
 from libs.database import DataBase
+import libs.utils as util
+
 # from googletrans import Translator
 
 class Bartender(commands.Cog):
@@ -16,17 +18,27 @@ class Bartender(commands.Cog):
     @commands.command(name = 'order')
     async def get_product(self, ctx, val):
         # Check producto registrado
-        sql = f"SELECT * FROM productos WHERE nombre = '{val.lower()}';"
-        self.database.cursor.execute(sql)
-        result = self.database.cursor.fetchall()
+        try:
+            sql = f"SELECT * FROM productos WHERE nombre = '{val.lower()}';"
+            self.database.cursor.execute(sql)
+            result = self.database.cursor.fetchall()
+        except self.mysql.connector.Error as err:
+                await ctx.send(embed= util.fail(err))
+                del self.database
+                self.database = DataBase()
 
         if result == []:
             await ctx.send(f"Sry, there are not products registered with the name: {val.lower()}")
         else:
             # Check disponibilidad del producto registrado
-            sql = f"SELECT nombre, url FROM imagenes WHERE nombre = '{val.lower()}';"
-            self.database.cursor.execute(sql)
-            result = self.database.cursor.fetchall()
+            try:
+                sql = f"SELECT nombre, url FROM imagenes WHERE nombre = '{val.lower()}';"
+                self.database.cursor.execute(sql)
+                result = self.database.cursor.fetchall()
+            except self.mysql.connector.Error as err:
+                await ctx.send(embed= util.fail(err))
+                del self.database
+                self.database = DataBase()
 
             if result == []:
                 await ctx.send(f"Sry, there are not enought {val.lower()}")
