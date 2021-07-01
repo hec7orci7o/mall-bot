@@ -49,12 +49,12 @@ class Manage(commands.Cog):
     async def insert(self, ctx, val: str=None, url: str=None):
         if val != None:
             # Check producto registrado
-            sql = f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"
+            sql = f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"
             self.database.cursor.execute(sql)
             result = self.database.cursor.fetchall()
 
             # Producto registrado + img disponible
-            if result != [] and url != None:
+            if result > 0 and result < 5 and url != None:
                 if is_url(url):
                     sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
                     self.database.cursor.execute(sql)
@@ -65,19 +65,23 @@ class Manage(commands.Cog):
                     await ctx.send(embed=embed)
 
             # Producto registrado + imagen no disponible
-            elif result != [] and url == None:
+            elif result > 0 and url == None:
                 embed = fail("Product already exist.")
                 await ctx.send(embed=embed)
 
             # Producto no registrado + imagen disponible
-            elif result == [] and url != None:
-                sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
-                self.database.cursor.execute(sql)   # Registra el producto { val }
-                self.database.mydb.commit()
-                sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
-                self.database.cursor.execute(sql)   # Registra una img para val
-                embed = success(f"New image of product: {val.lower()}")
-                await ctx.send(embed=embed)
+            elif result == 0 and url != None:
+                if is_url(url):
+                    sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
+                    self.database.cursor.execute(sql)   # Registra el producto { val }
+                    self.database.mydb.commit()
+                    sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
+                    self.database.cursor.execute(sql)   # Registra una img para val
+                    embed = success(f"New image of product: {val.lower()}")
+                    await ctx.send(embed=embed)
+                else:
+                    embed = fail("Error, not a well formed url.")
+                    await ctx.send(embed=embed)
 
             # Producto no registrado + imagen no disponible
             else:
@@ -104,11 +108,11 @@ class Manage(commands.Cog):
             embed = success(f"Name changed to: {val_new.capitalize()}")
             await ctx.send(embed=embed)
         else:
-            embed = fail("Error while changing the product name.")
+            embed = fail("Error product does not exist.")
             await ctx.send(embed=embed)
     
     @commands.command()
-    async def erase(self, ctx, val: int):
+    async def delete(self, ctx, val: int):
         sql = f"SELECT * FROM imagenes WHERE id = '{int(val)}';"
         self.database.cursor.execute(sql)
         result = self.database.cursor.fetchall()
@@ -125,7 +129,7 @@ class Manage(commands.Cog):
 
 
     @commands.command()
-    async def delete(self, ctx, val: str):
+    async def clear(self, ctx, val: str):
         sql = f"SELECT * FROM productos WHERE nombre = '{val.lower()}';"
         self.database.cursor.execute(sql)
         result = self.database.cursor.fetchall()
