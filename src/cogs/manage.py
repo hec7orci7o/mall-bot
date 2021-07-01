@@ -32,7 +32,7 @@ class Manage(commands.Cog):
             self.database = DataBase()
 
     @commands.command()
-    async def insert(self, ctx, val: str=None, url: str=None):
+    async def insert(self, ctx, val: str, url: str):
         if val != None:
             result = await self.check(ctx, val)
 
