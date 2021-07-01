@@ -47,7 +47,6 @@ class MallBot(commands.Bot):
         )
         channel = client.get_channel(int(os.environ['CHANNEL']))
         await channel.send(embed=embed)
-        # await client.change_presence()
         print('Logged on as {0}!'.format(self.user))
 
 client = MallBot(command_prefix='$', help_command=commands.HelpCommand())

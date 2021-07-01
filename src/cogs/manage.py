@@ -109,9 +109,28 @@ class Manage(commands.Cog):
             sql = f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';"
             self.database.cursor.execute(sql)
             result = self.database.cursor.fetchall()
+
+            iter = 1
             for row in result:
-                data = f'id: {row[0]}, product-name: {row[1]}'
-                await ctx.send(data)
+                if iter % 7 == 0: 
+                    text = str(row[0]) + '\n'
+                else:
+                    text = str(row[0]) + ', '
+
+            embed = discord.Embed(
+                description=f"IDs related to {row[1]}:\n```c++\n{text}```",
+                color=9224068
+            )
+            embed.set_author(
+                name="SQL query",
+                icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png"
+            )
+            embed.set_footer(
+                text="Made with 💘 by Hec7orci7o.",
+                icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4"
+            )
+            
+            await ctx.send(embed=embed)
         else:
             await ctx.send("Error > No right product selected.")
     
