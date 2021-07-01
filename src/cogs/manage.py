@@ -54,6 +54,7 @@ class Manage(commands.Cog):
             result = self.database.cursor.fetchall()
         except self.mysql.connector.Error as err:
             print(err)
+        print(result)
         return int(str(result)[1:-1])
 
     @commands.command()
