@@ -104,7 +104,7 @@ class Manage(commands.Cog):
     async def select(self, ctx, val: str):
         result = await self.check(ctx, val)
 
-        if result != 0:
+        if result > 0:
             try:
                 sql = f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';"
                 self.database.cursor.execute(sql)
