@@ -3,14 +3,14 @@ from discord.ext import commands
 from libs.database import DataBase
 from urllib.parse import urlparse
 
-def is_url(url):
+def is_url(url: str):
     try:
         result = urlparse(url)
         return all([result.scheme, result.netloc])
     except ValueError:
         return False
 
-def fail(error):
+def fail(error: str):
     embed = discord.Embed(
         description=f"```c++\n{error}```",
         color=14579829
@@ -25,7 +25,7 @@ def fail(error):
     )
     return embed
 
-def success(success):
+def success(success: str):
     embed = discord.Embed(
         description=f"```c++\n{success}```",
         color=9224068
@@ -46,31 +46,35 @@ class Manage(commands.Cog):
         self.database = DataBase()
 
     # Check producto registrado
-    def check(self, val: str):
+    async def check(self, ctx, val: str):
         try:
             sql = f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"
             self.database.cursor.execute(sql)
             result = self.database.cursor.fetchall()
         except self.mysql.connector.Error as err:
-            print(err)
+            await ctx.send(embed= fail(err))
+            del self.database
+            self.database = DataBase()
         return int(str(result)[2:-3])
 
-    def write(self, sql):
+    async def write(self, ctx, sql):
         try:
             self.database.cursor.execute(sql)
             self.database.mydb.commit()
         except self.mysql.connector.Error as err:
-            print(err)
+            await ctx.send(embed= fail(err))
+            del self.database
+            self.database = DataBase()
 
     @commands.command()
     async def insert(self, ctx, val: str=None, url: str=None):
         if val != None:
-            result = self.check(val)
+            result = self.check(ctx, val)
 
             # Producto registrado + img disponible
             if result > 0 and result < 5 and url != None:
                 if is_url(url):
-                    self.write(f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+                    self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
                     await ctx.send(embed= success(f"New image for: {val.lower()}\nImages left:{5-result}/5"))
                 else:
                     await ctx.send(embed= fail("Error, not a well formed url."))
@@ -82,15 +86,15 @@ class Manage(commands.Cog):
             # Producto no registrado + imagen disponible
             elif result == 0 and url != None:
                 if is_url(url):
-                    self.write(f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
-                    self.write(f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+                    self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
+                    self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
                     await ctx.send(embed= success(f"New product & image for: {val.lower()}"))
                 else:
                     await ctx.send(embed= fail("Error, not a well formed url."))
 
             # Producto no registrado + imagen no disponible
             else:
-                self.write(f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
+                self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
                 embed = success(f"New product: {val.lower()}")
                 await ctx.send(embed=embed)
         else:
@@ -98,10 +102,10 @@ class Manage(commands.Cog):
 
     @commands.command()
     async def update(self, ctx, val_old: str, val_new: str):
-        result = self.check(val_old)
+        result = self.check(ctx, val_old)
 
         if result > 0:
-            self.write(f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';")
+            self.write(ctx, f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';")
             await ctx.send(embed= success(f"Name changed to: {val_new.capitalize()}"))
         else:
             await ctx.send(embed= fail("Error product does not exist."))
@@ -116,24 +120,24 @@ class Manage(commands.Cog):
                 print(err)
 
         if result != []:
-            self.write(f"DELETE FROM imagenes WHERE id = {int(val)};")
+            self.write(ctx, f"DELETE FROM imagenes WHERE id = {int(val)};")
             await ctx.send(embed= success(f"Product with id = {int(val)} deleted successfuly."))
         else:
             await ctx.send(embed= fail(f"Error while deleting the product with id: {int(val)}."))
 
     @commands.command()
     async def clear(self, ctx, val: str):
-        result = self.check(val)
+        result = self.check(ctx, val)
 
         if result > 0:
-            self.write(f"DELETE FROM productos WHERE nombre = '{val.lower()}';")
+            self.write(ctx, f"DELETE FROM productos WHERE nombre = '{val.lower()}';")
             await ctx.send(embed= success(f"Product deleted: {val.capitalize()}"))
         else:
             await ctx.send(embed= fail("Error while deleting the product."))
 
     @commands.command()
     async def select(self, ctx, val: str):
-        result = self.check(val)
+        result = self.check(ctx, val)
 
         if result > 0:
             try:

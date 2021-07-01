@@ -10,3 +10,7 @@ class DataBase():
             database = os.environ['DATABASE']   
         )
         self.cursor = self.mydb.cursor()
+
+    def __del__(self):
+        self.database.close()
+                
