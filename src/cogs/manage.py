@@ -39,7 +39,7 @@ class Manage(commands.Cog):
             # Producto registrado + img disponible
             if result > 0 and result < 5 and url != None:
                 if util.is_url(url):
-                    self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+                    await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
                     await ctx.send(embed= util.success(f"New image for: {val.lower()}\nImages left:{5-result}/5"))
                 else:
                     await ctx.send(embed= util.fail("Error, not a well formed url."))
@@ -51,15 +51,15 @@ class Manage(commands.Cog):
             # Producto no registrado + imagen disponible
             elif result == 0 and url != None:
                 if util.is_url(url):
-                    self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
-                    self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+                    await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
+                    await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
                     await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
                 else:
                     await ctx.send(embed= util.fail("Error, not a well formed url."))
 
             # Producto no registrado + imagen no disponible
             else:
-                self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
+                await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
                 embed = util.success(f"New product: {val.lower()}")
                 await ctx.send(embed=embed)
         else:
@@ -70,7 +70,7 @@ class Manage(commands.Cog):
         result = self.check(ctx, val_old)
 
         if result > 0:
-            self.write(ctx, f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';")
+            await self.write(ctx, f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';")
             await ctx.send(embed= util.success(f"Name changed to: {val_new.capitalize()}"))
         else:
             await ctx.send(embed= util.fail("Error product does not exist."))
@@ -85,7 +85,7 @@ class Manage(commands.Cog):
                 print(err)
 
         if result != []:
-            self.write(ctx, f"DELETE FROM imagenes WHERE id = {int(val)};")
+            await self.write(ctx, f"DELETE FROM imagenes WHERE id = {int(val)};")
             await ctx.send(embed= util.success(f"Product with id = {int(val)} deleted successfuly."))
         else:
             await ctx.send(embed= util.fail(f"Error while deleting the product with id: {int(val)}."))
@@ -95,7 +95,7 @@ class Manage(commands.Cog):
         result = await self.check(ctx, val)
 
         if result > 0:
-            self.write(ctx, f"DELETE FROM productos WHERE nombre = '{val.lower()}';")
+            await self.write(ctx, f"DELETE FROM productos WHERE nombre = '{val.lower()}';")
             await ctx.send(embed= util.success(f"Product deleted: {val.capitalize()}"))
         else:
             await ctx.send(embed= util.fail("Error while deleting the product."))
