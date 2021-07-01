@@ -10,6 +10,21 @@ def is_url(url):
     except ValueError:
         return False
 
+def fail(error):
+    embed = discord.Embed(
+        description=f"```c++\n{error}```",
+        color=14579829
+    )
+    embed.set_author(
+        name="Error",
+        icon_url="https://www.freeiconspng.com/uploads/x-png-18.png"
+    )
+    embed.set_footer(
+        text="Made with 💘 by Hec7orci7o.",
+        icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4"
+    )
+    return embed
+
 class Manage(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -30,7 +45,8 @@ class Manage(commands.Cog):
                     self.database.cursor.execute(sql)
                     await ctx.send(f"New product: {val.lower()}")
                 else:
-                    await ctx.send("Error > Not a well formed url.")
+                    embed = fail("Error, not a well formed url.")
+                    await ctx.send(embed=embed)
 
             # Producto registrado + imagen no disponible
             elif result != [] and url == None:
@@ -53,7 +69,8 @@ class Manage(commands.Cog):
 
             self.database.mydb.commit()
         else:
-            await ctx.send("The method needs a product")
+            embed = fail("Error, the method needs a product.")
+            await ctx.send(embed=embed)
 
 
     @commands.command()
@@ -68,7 +85,8 @@ class Manage(commands.Cog):
             self.database.mydb.commit()
             await ctx.send(f"Name changed to: {val_new.capitalize()}")
         else:
-            await ctx.send("Error while changing the product name.")
+            embed = fail("Error while changing the product name.")
+            await ctx.send(embed=embed)
     
     @commands.command()
     async def erase(self, ctx, val):
@@ -82,7 +100,8 @@ class Manage(commands.Cog):
             self.database.mydb.commit()
             await ctx.send(f"Product with id = {int(val)} deleted successfuly.")
         else:
-            await ctx.send(f"Error while deleting the product with id: {int(val)}.")
+            embed = fail(f"Error while deleting the product with id: {int(val)}.")
+            await ctx.send(embed=embed)
 
 
     @commands.command()
@@ -97,7 +116,8 @@ class Manage(commands.Cog):
             self.database.mydb.commit()
             await ctx.send(f"Product deleted: {val.capitalize()}")
         else:
-            await ctx.send("Error while deleting the product.")
+            embed = fail("Error while deleting the product.")
+            await ctx.send(embed=embed)
 
     @commands.command()
     async def select(self, ctx, val):
@@ -133,19 +153,8 @@ class Manage(commands.Cog):
             
             await ctx.send(embed=embed)
         else:
-            embed = discord.Embed(
-                description=f"```c++\nNo right product selected.```",
-                color=14579829
-            )
-            embed.set_author(
-                name="Error",
-                icon_url="https://www.freeiconspng.com/uploads/x-png-18.png"
-            )
-            embed.set_footer(
-                text="Made with 💘 by Hec7orci7o.",
-                icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4"
-            )
+            embed = fail("No right product selected.")
             await ctx.send(embed=embed)
-    
+
 def setup(bot):
     bot.add_cog(Manage(bot))
