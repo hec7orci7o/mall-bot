@@ -25,6 +25,21 @@ def fail(error):
     )
     return embed
 
+def success(success):
+    embed = discord.Embed(
+        description=f"```c++\n{success}```",
+        color=9224068
+    )
+    embed.set_author(
+        name="Success",
+        icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_tick_icon.svg/240px-Flat_tick_icon.svg.png"
+    )
+    embed.set_footer(
+        text="Made with 💘 by Hec7orci7o.",
+        icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4"
+    )
+    return embed
+
 class Manage(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -43,14 +58,16 @@ class Manage(commands.Cog):
                 if is_url(url):
                     sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
                     self.database.cursor.execute(sql)
-                    await ctx.send(f"New product: {val.lower()}")
+                    embed = success(f"New product: {val.lower()}")
+                    await ctx.send(embed=embed)
                 else:
                     embed = fail("Error, not a well formed url.")
                     await ctx.send(embed=embed)
 
             # Producto registrado + imagen no disponible
             elif result != [] and url == None:
-                await ctx.send("Product already exist.")
+                embed = fail("Product already exist.")
+                await ctx.send(embed=embed)
 
             # Producto no registrado + imagen disponible
             elif result == [] and url != None:
@@ -59,19 +76,20 @@ class Manage(commands.Cog):
                 self.database.mydb.commit()
                 sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
                 self.database.cursor.execute(sql)   # Registra una img para val
-                await ctx.send(f"New product: {val.lower()}")
+                embed = success(f"New image of product: {val.lower()}")
+                await ctx.send(embed=embed)
 
             # Producto no registrado + imagen no disponible
             else:
                 sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
                 self.database.cursor.execute(sql)   # Registra el producto { val }
-                await ctx.send(f"New product: {val.lower()}")
+                embed = success(f"New product: {val.lower()}")
+                await ctx.send(embed=embed)
 
             self.database.mydb.commit()
         else:
             embed = fail("Error, the method needs a product.")
             await ctx.send(embed=embed)
-
 
     @commands.command()
     async def update(self, ctx, val_old, val_new):
@@ -83,7 +101,8 @@ class Manage(commands.Cog):
             sql = f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';"
             self.database.cursor.execute(sql)
             self.database.mydb.commit()
-            await ctx.send(f"Name changed to: {val_new.capitalize()}")
+            embed = success(f"Name changed to: {val_new.capitalize()}")
+            await ctx.send(embed=embed)
         else:
             embed = fail("Error while changing the product name.")
             await ctx.send(embed=embed)
@@ -98,7 +117,8 @@ class Manage(commands.Cog):
             sql = f"DELETE FROM imagenes WHERE id = {int(val)};"
             self.database.cursor.execute(sql)
             self.database.mydb.commit()
-            await ctx.send(f"Product with id = {int(val)} deleted successfuly.")
+            embed = success(f"Product with id = {int(val)} deleted successfuly.")
+            await ctx.send(embed=embed)
         else:
             embed = fail(f"Error while deleting the product with id: {int(val)}.")
             await ctx.send(embed=embed)
@@ -114,7 +134,8 @@ class Manage(commands.Cog):
             sql = f"DELETE FROM productos WHERE nombre = '{val.lower()}';"
             self.database.cursor.execute(sql)
             self.database.mydb.commit()
-            await ctx.send(f"Product deleted: {val.capitalize()}")
+            embed = success(f"Product deleted: {val.capitalize()}")
+            await ctx.send(embed=embed)
         else:
             embed = fail("Error while deleting the product.")
             await ctx.send(embed=embed)
