@@ -58,7 +58,7 @@ class Manage(commands.Cog):
                 if is_url(url):
                     sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
                     self.database.cursor.execute(sql)
-                    embed = success(f"New product: {val.lower()}")
+                    embed = success(f"New image for: {val.lower()}\nImages left:{5-result}/5")
                     await ctx.send(embed=embed)
                 else:
                     embed = fail("Error, not a well formed url.")
@@ -77,7 +77,7 @@ class Manage(commands.Cog):
                     self.database.mydb.commit()
                     sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
                     self.database.cursor.execute(sql)   # Registra una img para val
-                    embed = success(f"New image of product: {val.lower()}")
+                    embed = success(f"New product & image for: {val.lower()}")
                     await ctx.send(embed=embed)
                 else:
                     embed = fail("Error, not a well formed url.")
