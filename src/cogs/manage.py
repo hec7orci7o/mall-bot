@@ -111,8 +111,12 @@ class Manage(commands.Cog):
             result = self.database.cursor.fetchall()
 
             iter = 1
-            for row in result:  text = str(row[0]) + '.' if iter == 5 else text = str(row[0]) + ', '
-            
+            for row in result:
+                if iter == 5:
+                    text = str(row[0]) + '.'
+                else:
+                    text = str(row[0]) + ', '
+
             embed = discord.Embed(
                 description=f"IDs related to {row[1]}:\n```c++\n{text}```",
                 color=9224068
@@ -128,7 +132,19 @@ class Manage(commands.Cog):
             
             await ctx.send(embed=embed)
         else:
-            await ctx.send("Error > No right product selected.")
+            embed = discord.Embed(
+                description=f"```c++\nNo right product selected.```",
+                color=14579829
+            )
+            embed.set_author(
+                name="Error",
+                icon_url="https://www.freeiconspng.com/uploads/x-png-18.png"
+            )
+            embed.set_footer(
+                text="Made with 💘 by Hec7orci7o.",
+                icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4"
+            )
+            await ctx.send(embed=embed)
     
 def setup(bot):
     bot.add_cog(Manage(bot))
