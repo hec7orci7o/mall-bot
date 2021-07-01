@@ -34,7 +34,7 @@ class Manage(commands.Cog):
     @commands.command()
     async def insert(self, ctx, val: str=None, url: str=None):
         if val != None:
-            result = self.check(ctx, val)
+            result = await self.check(ctx, val)
 
             # Producto registrado + img disponible
             if result > 0 and result < 5 and url != None:
@@ -92,7 +92,7 @@ class Manage(commands.Cog):
 
     @commands.command()
     async def clear(self, ctx, val: str):
-        result = self.check(ctx, val)
+        result = await self.check(ctx, val)
 
         if result > 0:
             self.write(ctx, f"DELETE FROM productos WHERE nombre = '{val.lower()}';")
@@ -102,7 +102,7 @@ class Manage(commands.Cog):
 
     @commands.command()
     async def select(self, ctx, val: str):
-        result = self.check(ctx, val)
+        result = await self.check(ctx, val)
 
         if result != 0:
             try:
