@@ -67,7 +67,7 @@ class Manage(commands.Cog):
 
     @commands.command()
     async def update(self, ctx, val_old: str, val_new: str):
-        result = self.check(ctx, val_old)
+        result = await self.check(ctx, val_old)
 
         if result > 0:
             await self.write(ctx, f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';")
