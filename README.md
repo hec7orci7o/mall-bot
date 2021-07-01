@@ -50,4 +50,5 @@ mall bot is a discord bot based on a restaurant mall, allowing the user to order
         * Password: `PASS`*
         * Database: `DATABASE`*
         * Token: `TOKEN`*
+        * Channel: `CHANNEL`*
         * database_default: `CLEARDB_DATABASE_URL`
