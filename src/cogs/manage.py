@@ -46,7 +46,7 @@ class Manage(commands.Cog):
         self.database = DataBase()
 
     @commands.command()
-    async def insert(self, ctx, val=None, url=None):
+    async def insert(self, ctx, val: str=None, url: str=None):
         if val != None:
             # Check producto registrado
             sql = f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"
@@ -92,7 +92,7 @@ class Manage(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command()
-    async def update(self, ctx, val_old, val_new):
+    async def update(self, ctx, val_old: str, val_new: str):
         sql = f"SELECT * FROM productos WHERE nombre = '{val_old.lower()}';"
         self.database.cursor.execute(sql)
         result = self.database.cursor.fetchall()
@@ -108,8 +108,8 @@ class Manage(commands.Cog):
             await ctx.send(embed=embed)
     
     @commands.command()
-    async def erase(self, ctx, val):
-        sql = f"SELECT * FROM images WHERE id = '{int(val)}';"
+    async def erase(self, ctx, val: int):
+        sql = f"SELECT * FROM imagenes WHERE id = '{int(val)}';"
         self.database.cursor.execute(sql)
         result = self.database.cursor.fetchall()
 
@@ -125,7 +125,7 @@ class Manage(commands.Cog):
 
 
     @commands.command()
-    async def delete(self, ctx, val):
+    async def delete(self, ctx, val: str):
         sql = f"SELECT * FROM productos WHERE nombre = '{val.lower()}';"
         self.database.cursor.execute(sql)
         result = self.database.cursor.fetchall()
@@ -141,7 +141,7 @@ class Manage(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command()
-    async def select(self, ctx, val):
+    async def select(self, ctx, val: str):
         sql = f"SELECT * FROM productos WHERE nombre = '{val.lower()}';"
         self.database.cursor.execute(sql)
         result = self.database.cursor.fetchall()
