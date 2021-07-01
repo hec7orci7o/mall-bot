@@ -45,9 +45,9 @@ class MallBot(commands.Bot):
             text="Made with 💘 by Hec7orci7o.",
             icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4"
         )
-        channel = client.get_channel(os.environ['CHANNEL'])
+        channel = client.get_channel(int(os.environ['CHANNEL']))
         await channel.send(embed=embed)
-        await client.change_presence()
+        # await client.change_presence()
         print('Logged on as {0}!'.format(self.user))
 
 client = MallBot(command_prefix='$', help_command=commands.HelpCommand())
