@@ -153,6 +153,7 @@ class Manage(commands.Cog):
 
             iter = 1
             max_items = len(result)
+            text = ""
             for row in result:
                 if iter == 5 or iter == max_items:
                     text += str(row[0]) + '.'
