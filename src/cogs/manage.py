@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from libs.database import DataBase
 from urllib.parse import urlparse
-from mysql.connector import errorcode
 
 def is_url(url):
     try:
@@ -54,7 +53,6 @@ class Manage(commands.Cog):
             result = self.database.cursor.fetchall()
         except self.mysql.connector.Error as err:
             print(err)
-        print(result)
         return int(str(result)[2:-3])
 
     @commands.command()
@@ -70,16 +68,13 @@ class Manage(commands.Cog):
                         self.database.cursor.execute(sql)
                     except self.mysql.connector.Error as err:
                         print(err)
-                    embed = success(f"New image for: {val.lower()}\nImages left:{5-result}/5")
-                    await ctx.send(embed=embed)
+                    await ctx.send(embed= success(f"New image for: {val.lower()}\nImages left:{5-result}/5"))
                 else:
-                    embed = fail("Error, not a well formed url.")
-                    await ctx.send(embed=embed)
+                    await ctx.send(embed= fail("Error, not a well formed url."))
 
             # Producto registrado + imagen no disponible
             elif result > 0 and url == None:
-                embed = fail("Product already exist.")
-                await ctx.send(embed=embed)
+                await ctx.send(embed= fail("Product already exist."))
 
             # Producto no registrado + imagen disponible
             elif result == 0 and url != None:
@@ -95,11 +90,9 @@ class Manage(commands.Cog):
                         self.database.cursor.execute(sql)   # Registra una img para val
                     except self.mysql.connector.Error as err:
                         print(err)
-                    embed = success(f"New product & image for: {val.lower()}")
-                    await ctx.send(embed=embed)
+                    await ctx.send(embed= success(f"New product & image for: {val.lower()}"))
                 else:
-                    embed = fail("Error, not a well formed url.")
-                    await ctx.send(embed=embed)
+                    await ctx.send(embed= fail("Error, not a well formed url."))
 
             # Producto no registrado + imagen no disponible
             else:
@@ -115,8 +108,7 @@ class Manage(commands.Cog):
             except self.mysql.connector.Error as err:
                 print(err)
         else:
-            embed = fail("Error, the method needs a product.")
-            await ctx.send(embed=embed)
+            await ctx.send(embed= fail("Error, the method needs a product."))
 
     @commands.command()
     async def update(self, ctx, val_old: str, val_new: str):
@@ -129,11 +121,9 @@ class Manage(commands.Cog):
                 self.database.mydb.commit()
             except self.mysql.connector.Error as err:
                 print(err)
-            embed = success(f"Name changed to: {val_new.capitalize()}")
-            await ctx.send(embed=embed)
+            await ctx.send(embed= success(f"Name changed to: {val_new.capitalize()}"))
         else:
-            embed = fail("Error product does not exist.")
-            await ctx.send(embed=embed)
+            await ctx.send(embed= fail("Error product does not exist."))
     
     @commands.command()
     async def delete(self, ctx, val: int):
@@ -151,11 +141,9 @@ class Manage(commands.Cog):
                 self.database.mydb.commit()
             except self.mysql.connector.Error as err:
                 print(err)
-            embed = success(f"Product with id = {int(val)} deleted successfuly.")
-            await ctx.send(embed=embed)
+            await ctx.send(embed= success(f"Product with id = {int(val)} deleted successfuly."))
         else:
-            embed = fail(f"Error while deleting the product with id: {int(val)}.")
-            await ctx.send(embed=embed)
+            await ctx.send(embed= fail(f"Error while deleting the product with id: {int(val)}."))
 
     @commands.command()
     async def clear(self, ctx, val: str):
@@ -168,11 +156,9 @@ class Manage(commands.Cog):
                 self.database.mydb.commit()
             except self.mysql.connector.Error as err:
                 print(err)
-            embed = success(f"Product deleted: {val.capitalize()}")
-            await ctx.send(embed=embed)
+            await ctx.send(embed= success(f"Product deleted: {val.capitalize()}"))
         else:
-            embed = fail("Error while deleting the product.")
-            await ctx.send(embed=embed)
+            await ctx.send(embed= fail("Error while deleting the product."))
 
     @commands.command()
     async def select(self, ctx, val: str):
@@ -190,29 +176,17 @@ class Manage(commands.Cog):
             max_items = len(result)
             text = ""
             for row in result:
-                if iter == 5 or iter == max_items:
-                    text += str(row[0]) + '.'
-                else:
-                    text += str(row[0]) + ', '
-                iter+=1
+                if iter == 5 or iter == max_items:  text += str(row[0]) + '.'
+                else:                               text += str(row[0]) + ', '
+                iter += 1
 
-            embed = discord.Embed(
-                description=f"IDs related to {row[1]}:\n```c++\n{text}```",
-                color=9224068
-            )
-            embed.set_author(
-                name="SQL query",
-                icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png"
-            )
-            embed.set_footer(
-                text="Made with 💘 by Hec7orci7o.",
-                icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4"
-            )
+            embed = discord.Embed(description=f"IDs related to {row[1]}:\n```c++\n{text}```", color=9224068)
+            embed.set_author(name="SQL query", icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
+            embed.set_footer(text="Made with 💘 by Hec7orci7o.", icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
             
             await ctx.send(embed=embed)
         else:
-            embed = fail("No right product selected.")
-            await ctx.send(embed=embed)
+            await ctx.send(embed= fail("No right product selected."))
 
 def setup(bot):
     bot.add_cog(Manage(bot))
