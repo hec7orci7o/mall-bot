@@ -155,9 +155,9 @@ class Manage(commands.Cog):
             max_items = len(result)
             for row in result:
                 if iter == 5 or iter == max_items:
-                    text = str(row[0]) + '.'
+                    text += str(row[0]) + '.'
                 else:
-                    text = str(row[0]) + ', '
+                    text += str(row[0]) + ', '
 
             embed = discord.Embed(
                 description=f"IDs related to {row[1]}:\n```c++\n{text}```",
