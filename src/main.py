@@ -1,6 +1,10 @@
-import discord
-from discord.ext import commands
 import os
+import datetime
+import discord
+from discord import widget
+from discord import channel
+from discord.embeds import Embed
+from discord.ext import commands
 
 class HelpCommand(commands.HelpCommand):
     def __init__(self):
@@ -20,6 +24,30 @@ class HelpCommand(commands.HelpCommand):
 
 class MallBot(commands.Bot):
     async def on_ready(self):
+        embed = discord.Embed(
+            description="If the public knew what they want,\nthen it would not be the public,\nit would be the artist.",
+            color=9224068
+        )
+        embed.set_thumbnail(
+            url="https://images.unsplash.com/photo-1543007630-9710e4a00a20?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+        )
+        embed.set_author(
+            name=f"{str(self.user)[:-5]}",
+            url="https://hec7or.me/",
+            icon_url="https://images.unsplash.com/photo-1590486145851-aae8758c4211?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80"
+        )
+        embed.add_field(
+            name="Stats:",
+            value="```c++\nRunning on {} servers\nStarted at {}```".format(len(client.guilds), datetime.datetime.now().strftime("%X")),
+            inline=False
+        )
+        embed.set_footer(
+            text="Made with 💘 by Hec7orci7o.",
+            icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4"
+        )
+        channel = client.get_channel(os.environ['CHANNEL'])
+        await channel.send(embed=embed)
+        await client.change_presence()
         print('Logged on as {0}!'.format(self.user))
 
 client = MallBot(command_prefix='$', help_command=commands.HelpCommand())
@@ -31,6 +59,6 @@ for filename in os.listdir('src/cogs'):
             client.load_extension(f'cogs.{filename[:-3]}')
             print(f'cogs.{filename[:-3]} loaded successfully.')
         except:
-            print(f'error al cargar el cog {filename[:-3]}')
+            print(f'Error al cargar el cog {filename[:-3]}')
 
 client.run(os.environ['TOKEN'])
