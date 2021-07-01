@@ -32,27 +32,27 @@ class Manage(commands.Cog):
             self.database = DataBase()
 
     @commands.command()
-    async def insert(self, ctx, val: str, url: str):
+    async def insert(self, ctx, val: str, *args):
         if val != None:
             result = await self.check(ctx, val)
 
             # Producto registrado + img disponible
-            if result > 0 and result < 5 and url != None:
-                if util.is_url(url):
-                    await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+            if result > 0 and result < 5 and args != None:
+                if util.is_url(args):
+                    await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{args}');")
                     await ctx.send(embed= util.success(f"New image for: {val.lower()}\nImages left:{5-result}/5"))
                 else:
                     await ctx.send(embed= util.fail("Error, not a well formed url."))
 
             # Producto registrado + imagen no disponible
-            elif result > 0 and url == None:
+            elif result > 0 and args == None:
                 await ctx.send(embed= util.fail("Product already exist."))
 
             # Producto no registrado + imagen disponible
-            elif result == 0 and url != None:
-                if util.is_url(url):
+            elif result == 0 and args != None:
+                if util.is_url(args):
                     await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
-                    await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+                    await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{args}');")
                     await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
                 else:
                     await ctx.send(embed= util.fail("Error, not a well formed url."))
