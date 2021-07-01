@@ -55,7 +55,7 @@ class Manage(commands.Cog):
         except self.mysql.connector.Error as err:
             print(err)
         print(result)
-        return int(str(result)[1:-1])
+        return int(str(result)[2:-3])
 
     @commands.command()
     async def insert(self, ctx, val: str=None, url: str=None):
