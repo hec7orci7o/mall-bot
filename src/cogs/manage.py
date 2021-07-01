@@ -55,6 +55,13 @@ class Manage(commands.Cog):
             print(err)
         return int(str(result)[2:-3])
 
+    def write(self, sql):
+        try:
+            self.database.cursor.execute(sql)
+            self.database.mydb.commit()
+        except self.mysql.connector.Error as err:
+            print(err)
+
     @commands.command()
     async def insert(self, ctx, val: str=None, url: str=None):
         if val != None:
@@ -63,11 +70,7 @@ class Manage(commands.Cog):
             # Producto registrado + img disponible
             if result > 0 and result < 5 and url != None:
                 if is_url(url):
-                    try:
-                        sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
-                        self.database.cursor.execute(sql)
-                    except self.mysql.connector.Error as err:
-                        print(err)
+                    self.write(f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
                     await ctx.send(embed= success(f"New image for: {val.lower()}\nImages left:{5-result}/5"))
                 else:
                     await ctx.send(embed= fail("Error, not a well formed url."))
@@ -79,34 +82,17 @@ class Manage(commands.Cog):
             # Producto no registrado + imagen disponible
             elif result == 0 and url != None:
                 if is_url(url):
-                    try:
-                        sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
-                        self.database.cursor.execute(sql)   # Registra el producto { val }
-                        self.database.mydb.commit()
-                    except self.mysql.connector.Error as err:
-                        print(err)
-                    try:
-                        sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
-                        self.database.cursor.execute(sql)   # Registra una img para val
-                    except self.mysql.connector.Error as err:
-                        print(err)
+                    self.write(f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
+                    self.write(f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
                     await ctx.send(embed= success(f"New product & image for: {val.lower()}"))
                 else:
                     await ctx.send(embed= fail("Error, not a well formed url."))
 
             # Producto no registrado + imagen no disponible
             else:
-                try:
-                    sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
-                    self.database.cursor.execute(sql)   # Registra el producto { val }
-                except self.mysql.connector.Error as err:
-                    print(err)
+                self.write(f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
                 embed = success(f"New product: {val.lower()}")
                 await ctx.send(embed=embed)
-            try:
-                self.database.mydb.commit()
-            except self.mysql.connector.Error as err:
-                print(err)
         else:
             await ctx.send(embed= fail("Error, the method needs a product."))
 
@@ -115,12 +101,7 @@ class Manage(commands.Cog):
         result = self.check(val_old)
 
         if result > 0:
-            try:
-                sql = f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';"
-                self.database.cursor.execute(sql)
-                self.database.mydb.commit()
-            except self.mysql.connector.Error as err:
-                print(err)
+            self.write(f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';")
             await ctx.send(embed= success(f"Name changed to: {val_new.capitalize()}"))
         else:
             await ctx.send(embed= fail("Error product does not exist."))
@@ -135,12 +116,7 @@ class Manage(commands.Cog):
                 print(err)
 
         if result != []:
-            try:
-                sql = f"DELETE FROM imagenes WHERE id = {int(val)};"
-                self.database.cursor.execute(sql)
-                self.database.mydb.commit()
-            except self.mysql.connector.Error as err:
-                print(err)
+            self.write(f"DELETE FROM imagenes WHERE id = {int(val)};")
             await ctx.send(embed= success(f"Product with id = {int(val)} deleted successfuly."))
         else:
             await ctx.send(embed= fail(f"Error while deleting the product with id: {int(val)}."))
@@ -149,13 +125,8 @@ class Manage(commands.Cog):
     async def clear(self, ctx, val: str):
         result = self.check(val)
 
-        if result != []:
-            try:
-                sql = f"DELETE FROM productos WHERE nombre = '{val.lower()}';"
-                self.database.cursor.execute(sql)
-                self.database.mydb.commit()
-            except self.mysql.connector.Error as err:
-                print(err)
+        if result > 0:
+            self.write(f"DELETE FROM productos WHERE nombre = '{val.lower()}';")
             await ctx.send(embed= success(f"Product deleted: {val.capitalize()}"))
         else:
             await ctx.send(embed= fail("Error while deleting the product."))
