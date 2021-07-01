@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from libs.database import DataBase
 from urllib.parse import urlparse
+from mysql.connector import errorcode
 
 def is_url(url):
     try:
@@ -45,19 +46,29 @@ class Manage(commands.Cog):
         self.bot = bot
         self.database = DataBase()
 
-    @commands.command()
-    async def insert(self, ctx, val: str=None, url: str=None):
-        if val != None:
-            # Check producto registrado
+    # Check producto registrado
+    def check(self, val: str):
+        try:
             sql = f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"
             self.database.cursor.execute(sql)
             result = self.database.cursor.fetchall()
+        except self.mysql.connector.Error as err:
+            print(err)
+        return result
+
+    @commands.command()
+    async def insert(self, ctx, val: str=None, url: str=None):
+        if val != None:
+            result = self.check(val)
 
             # Producto registrado + img disponible
             if result > 0 and result < 5 and url != None:
                 if is_url(url):
-                    sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
-                    self.database.cursor.execute(sql)
+                    try:
+                        sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
+                        self.database.cursor.execute(sql)
+                    except self.mysql.connector.Error as err:
+                        print(err)
                     embed = success(f"New image for: {val.lower()}\nImages left:{5-result}/5")
                     await ctx.send(embed=embed)
                 else:
@@ -72,11 +83,17 @@ class Manage(commands.Cog):
             # Producto no registrado + imagen disponible
             elif result == 0 and url != None:
                 if is_url(url):
-                    sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
-                    self.database.cursor.execute(sql)   # Registra el producto { val }
-                    self.database.mydb.commit()
-                    sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
-                    self.database.cursor.execute(sql)   # Registra una img para val
+                    try:
+                        sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
+                        self.database.cursor.execute(sql)   # Registra el producto { val }
+                        self.database.mydb.commit()
+                    except self.mysql.connector.Error as err:
+                        print(err)
+                    try:
+                        sql = f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');"
+                        self.database.cursor.execute(sql)   # Registra una img para val
+                    except self.mysql.connector.Error as err:
+                        print(err)
                     embed = success(f"New product & image for: {val.lower()}")
                     await ctx.send(embed=embed)
                 else:
@@ -85,26 +102,32 @@ class Manage(commands.Cog):
 
             # Producto no registrado + imagen no disponible
             else:
-                sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
-                self.database.cursor.execute(sql)   # Registra el producto { val }
+                try:
+                    sql = f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');"
+                    self.database.cursor.execute(sql)   # Registra el producto { val }
+                except self.mysql.connector.Error as err:
+                    print(err)
                 embed = success(f"New product: {val.lower()}")
                 await ctx.send(embed=embed)
-
-            self.database.mydb.commit()
+            try:
+                self.database.mydb.commit()
+            except self.mysql.connector.Error as err:
+                print(err)
         else:
             embed = fail("Error, the method needs a product.")
             await ctx.send(embed=embed)
 
     @commands.command()
     async def update(self, ctx, val_old: str, val_new: str):
-        sql = f"SELECT * FROM productos WHERE nombre = '{val_old.lower()}';"
-        self.database.cursor.execute(sql)
-        result = self.database.cursor.fetchall()
+        result = self.check(val_old)
 
-        if result != []:
-            sql = f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';"
-            self.database.cursor.execute(sql)
-            self.database.mydb.commit()
+        if result > 0:
+            try:
+                sql = f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';"
+                self.database.cursor.execute(sql)
+                self.database.mydb.commit()
+            except self.mysql.connector.Error as err:
+                print(err)
             embed = success(f"Name changed to: {val_new.capitalize()}")
             await ctx.send(embed=embed)
         else:
@@ -113,31 +136,37 @@ class Manage(commands.Cog):
     
     @commands.command()
     async def delete(self, ctx, val: int):
-        sql = f"SELECT * FROM imagenes WHERE id = '{int(val)}';"
-        self.database.cursor.execute(sql)
-        result = self.database.cursor.fetchall()
+        try:
+            sql = f"SELECT * FROM imagenes WHERE id = '{int(val)}';"
+            self.database.cursor.execute(sql)
+            result = self.database.cursor.fetchall()
+        except self.mysql.connector.Error as err:
+                print(err)
 
         if result != []:
-            sql = f"DELETE FROM imagenes WHERE id = {int(val)};"
-            self.database.cursor.execute(sql)
-            self.database.mydb.commit()
+            try:
+                sql = f"DELETE FROM imagenes WHERE id = {int(val)};"
+                self.database.cursor.execute(sql)
+                self.database.mydb.commit()
+            except self.mysql.connector.Error as err:
+                print(err)
             embed = success(f"Product with id = {int(val)} deleted successfuly.")
             await ctx.send(embed=embed)
         else:
             embed = fail(f"Error while deleting the product with id: {int(val)}.")
             await ctx.send(embed=embed)
 
-
     @commands.command()
     async def clear(self, ctx, val: str):
-        sql = f"SELECT * FROM productos WHERE nombre = '{val.lower()}';"
-        self.database.cursor.execute(sql)
-        result = self.database.cursor.fetchall()
+        result = self.check(val)
 
         if result != []:
-            sql = f"DELETE FROM productos WHERE nombre = '{val.lower()}';"
-            self.database.cursor.execute(sql)
-            self.database.mydb.commit()
+            try:
+                sql = f"DELETE FROM productos WHERE nombre = '{val.lower()}';"
+                self.database.cursor.execute(sql)
+                self.database.mydb.commit()
+            except self.mysql.connector.Error as err:
+                print(err)
             embed = success(f"Product deleted: {val.capitalize()}")
             await ctx.send(embed=embed)
         else:
@@ -146,14 +175,15 @@ class Manage(commands.Cog):
 
     @commands.command()
     async def select(self, ctx, val: str):
-        sql = f"SELECT * FROM productos WHERE nombre = '{val.lower()}';"
-        self.database.cursor.execute(sql)
-        result = self.database.cursor.fetchall()
+        result = self.check(val)
 
-        if result != []:
-            sql = f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';"
-            self.database.cursor.execute(sql)
-            result = self.database.cursor.fetchall()
+        if result > 0:
+            try:
+                sql = f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';"
+                self.database.cursor.execute(sql)
+                result = self.database.cursor.fetchall()
+            except self.mysql.connector.Error as err:
+                print(err)
 
             iter = 1
             max_items = len(result)
