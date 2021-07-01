@@ -159,6 +159,7 @@ class Manage(commands.Cog):
                     text += str(row[0]) + '.'
                 else:
                     text += str(row[0]) + ', '
+                iter+=1
 
             embed = discord.Embed(
                 description=f"IDs related to {row[1]}:\n```c++\n{text}```",
