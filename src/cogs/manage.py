@@ -19,6 +19,7 @@ class Manage(commands.Cog):
             await ctx.send(embed= util.fail(err))
             del self.database
             self.database = DataBase()
+        print(str(result)[2:-3])
         return int(str(result)[2:-3])
 
     async def write(self, ctx, sql):
