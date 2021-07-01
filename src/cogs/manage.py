@@ -111,8 +111,9 @@ class Manage(commands.Cog):
             result = self.database.cursor.fetchall()
 
             iter = 1
+            max_items = len(result)
             for row in result:
-                if iter == 5:
+                if iter == 5 or iter == max_items:
                     text = str(row[0]) + '.'
                 else:
                     text = str(row[0]) + ', '
