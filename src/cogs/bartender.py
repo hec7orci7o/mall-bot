@@ -70,6 +70,14 @@ class Bartender(commands.Cog):
         message = await ctx.send(embed= embed)
         for reaction in ['👍', '👎']:
             await message.add_reaction(reaction)
+
+    async def carta(self, ctx):
+        # query que muestra todas las categorias
+        # añadir reacciones con los tipos de categoria
+            # escoger siguiente pagina a mostrar (ej : bebidas sin alcohol)
+        # borrar embed anterior y mostrar el siguiente. Mostrar 5 productos en 3 columnas (5 5 5) 
+            # y si hay mas mostrar un boton de paginacion avanzar y retroceder abajo
+        pass
     
 def setup(bot):
     bot.add_cog(Bartender(bot))

@@ -16,7 +16,7 @@ class BotHelpCommand(commands.HelpCommand):
             await self.get_destination().send(f'{cog.qualified_name}: {[command.name for command in mapping[cog]]}')
 
     async def send_cog_help(self, cog):
-        await self.get_destination().send(f'{cog.qualified_name}: {[command.name for command in cog.get_command()]}')
+        await self.get_destination().send(f'{cog.cualified_name}: {[command.name for command in cog.get_command()]}')
     
     async def send_command_help(self, command):
         await self.get_destination().send(command.name)

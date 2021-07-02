@@ -1,8 +1,9 @@
 import os
 import discord
 import libs.utils as util
+import libs.helper as helper
 from discord.ext import commands
-from libs.database import DataBase
+
 
 
 def is_bartender():
@@ -10,31 +11,9 @@ def is_bartender():
         return ctx.message.author.id == int(os.environ['STAFF'])
     return commands.check(predicate)
 
-class Manage(commands.Cog):
+class Manage(helper.Helper, commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    # sql = f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"
-    async def read(self, ctx, sql):
-        try:
-            database = DataBase()
-            database.cursor.execute(sql)
-            result = database.cursor.fetchall()
-            del database
-        except database.mysql.connector.Error as err:
-            await ctx.send(embed= util.fail(err))
-            del database
-        return result
-
-    async def write(self, ctx, sql):
-        try:
-            database = DataBase()
-            database.cursor.execute(sql)
-            database.mydb.commit()
-            del database
-        except database.mysql.connector.Error as err:
-            await ctx.send(embed= util.fail(err))
-            del database
 
     @is_bartender()
     @commands.command()
