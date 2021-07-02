@@ -13,32 +13,25 @@ class Manage(commands.Cog):
     # Check producto registrado
     async def check(self,ctx, val: str):
         try:
-            self.database.mydb(os.environ['HOST'], os.environ['USER'], os.environ['PASS'], os.environ['DATABASE'])
             sql = f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"
             self.database.cursor.execute(sql)
             result = self.database.cursor.fetchall()
-            del self.database
         except self.mysql.connector.Error as err:
             await ctx.send(embed= util.fail(err))
-            del self.database
             
         print(str(result)[2:-3])
         return int(str(result)[2:-3])
 
     async def write(self, ctx, sql):
         try:
-            self.database.mydb(os.environ['HOST'], os.environ['USER'], os.environ['PASS'], os.environ['DATABASE'])
             self.database.cursor.execute(sql)
             self.database.mydb.commit()
-            del self.database
         except self.mysql.connector.Error as err:
             await ctx.send(embed= util.fail(err))
-            del self.database
 
     @commands.command()
     async def insert(self, ctx, val: str, url: str= ""):
         result = await self.check(ctx, val)
-        print(result)   # debug
         # Nuevo producto
         if result == 0:
             if url == "":
@@ -74,14 +67,11 @@ class Manage(commands.Cog):
     @commands.command()
     async def delete(self, ctx, val: int):
         try:
-            self.database.mydb(os.environ['HOST'], os.environ['USER'], os.environ['PASS'], os.environ['DATABASE'])
             sql = f"SELECT * FROM imagenes WHERE id = '{int(val)}';"
             self.database.cursor.execute(sql)
             result = self.database.cursor.fetchall()
-            del self.database
         except self.mysql.connector.Error as err:
                 await ctx.send(embed= util.fail(err))
-                del self.database
 
         if result != []:
             await self.write(ctx, f"DELETE FROM imagenes WHERE id = {int(val)};")
@@ -105,14 +95,11 @@ class Manage(commands.Cog):
 
         if result > 0:
             try:
-                self.database.mydb(os.environ['HOST'], os.environ['USER'], os.environ['PASS'], os.environ['DATABASE'])
                 sql = f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';"
                 self.database.cursor.execute(sql)
                 result = self.database.cursor.fetchall()
-                del self.database
             except self.mysql.connector.Error as err:
                 await ctx.send(embed= util.fail(err))
-                del self.database
 
             iter = 1
             max_items = len(result)
