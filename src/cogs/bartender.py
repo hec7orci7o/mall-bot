@@ -10,7 +10,6 @@ import libs.utils as util
 class Bartender(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.database = DataBase()
         # self.lang = str(os.environ['LANG']).lower()
         # self.translator = Translator()
 
@@ -18,26 +17,28 @@ class Bartender(commands.Cog):
     async def get_product(self, ctx, val):
         # Check producto registrado
         try:
+            database = DataBase()
             sql = f"SELECT * FROM productos WHERE nombre = '{val.lower()}';"
-            self.database.cursor.execute(sql)
-            result = self.database.cursor.fetchall()
-        except self.mysql.connector.Error as err:
+            database.cursor.execute(sql)
+            result = database.cursor.fetchall()
+            del database
+        except database.mysql.connector.Error as err:
                 await ctx.send(embed= util.fail(err))
-                del self.database
-                self.database = DataBase()
+                del database
 
         if result == []:
             await ctx.send(f"Sry, there are not products registered with the name: {val.lower()}")
         else:
             # Check disponibilidad del producto registrado
             try:
+                database = DataBase()
                 sql = f"SELECT nombre, url FROM imagenes WHERE nombre = '{val.lower()}';"
-                self.database.cursor.execute(sql)
-                result = self.database.cursor.fetchall()
-            except self.mysql.connector.Error as err:
+                database.cursor.execute(sql)
+                result = database.cursor.fetchall()
+                del database
+            except database.mysql.connector.Error as err:
                 await ctx.send(embed= util.fail(err))
-                del self.database
-                self.database = DataBase()
+                del database
 
             if result == []:
                 await ctx.send(f"Sry, there are not enought {val.lower()}")
@@ -63,10 +64,9 @@ class Bartender(commands.Cog):
             title = f"{msg_2}",
             color = 16777215
         )
-        url = result[random.randint(0,len(result)-1)][1]
-        embed.set_image(url=url)
+        embed.set_image(url= result[random.randint(0,len(result)-1)][1])
         await message.delete()
-        message = await ctx.send(embed = embed)
+        message = await ctx.send(embed= embed)
         for reaction in ['👍', '👎']:
             await message.add_reaction(reaction)
     
