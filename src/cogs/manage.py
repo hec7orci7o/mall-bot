@@ -28,6 +28,7 @@ class Manage(commands.Cog):
     @commands.command()
     async def insert(self, ctx, val: str, url: str= ""):
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
+        print(result)
 
         # Producto ya existe
         if result == val.lower():
@@ -56,6 +57,7 @@ class Manage(commands.Cog):
     @commands.command()
     async def update(self, ctx, val_old: str, val_new: str):
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val_old.lower()}';")
+        print(result)
 
         if result != []:
             await self.write(ctx, f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';")
@@ -66,6 +68,7 @@ class Manage(commands.Cog):
     @commands.command()
     async def delete(self, ctx, val: int):
         result = await self.read(ctx, f"SELECT * FROM imagenes WHERE id = '{int(val)}';")
+        print(result)
 
         if result != []:
             await self.write(ctx, f"DELETE FROM imagenes WHERE id = {int(val)};")
@@ -76,6 +79,7 @@ class Manage(commands.Cog):
     @commands.command()
     async def clear(self, ctx, val: str):
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
+        print(result)
 
         if result == val.lower():
             await self.write(ctx, f"DELETE FROM productos WHERE nombre = '{val.lower()}';")
@@ -86,11 +90,13 @@ class Manage(commands.Cog):
     @commands.command()
     async def select(self, ctx, val: str):
         # Comprueba que exista el prodcuto
-        result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[2:-3]
+        result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
+        print(result)
 
         if result == val.lower():
             # Comprueba el numero de imagenes que existe para un producto
             result = int(str(await self.read(ctx, f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"))[2:-3])
+            print(result)
             if result == 0:
                 embed = discord.Embed(description=f"IDs related to {val.lower()}:\n```c++\nNo images has been added yet.```", color=9224068)
                 embed.set_author(name="SQL query", icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
@@ -98,6 +104,7 @@ class Manage(commands.Cog):
             
             else:
                 result = await self.read(ctx, f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';")
+                print(result)
                 iter, max_items, text = 1, len(result), ""
                 for row in result:
                     if iter == 5 or iter == max_items:  text += str(row[0]) + '.'
