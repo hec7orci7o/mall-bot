@@ -1,3 +1,4 @@
+import os
 import discord
 from discord.ext import commands
 from libs.database import DataBase
@@ -12,7 +13,7 @@ class Manage(commands.Cog):
     # Check producto registrado
     async def check(self,ctx, val: str):
         try:
-            self.database.mydb
+            self.database.mydb(os.environ['HOST'], os.environ['USER'], os.environ['PASS'], os.environ['DATABASE'])
             sql = f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"
             self.database.cursor.execute(sql)
             result = self.database.cursor.fetchall()
@@ -26,7 +27,7 @@ class Manage(commands.Cog):
 
     async def write(self, ctx, sql):
         try:
-            self.database.mydb
+            self.database.mydb(os.environ['HOST'], os.environ['USER'], os.environ['PASS'], os.environ['DATABASE'])
             self.database.cursor.execute(sql)
             self.database.mydb.commit()
             del self.database
@@ -73,7 +74,7 @@ class Manage(commands.Cog):
     @commands.command()
     async def delete(self, ctx, val: int):
         try:
-            self.database.mydb
+            self.database.mydb(os.environ['HOST'], os.environ['USER'], os.environ['PASS'], os.environ['DATABASE'])
             sql = f"SELECT * FROM imagenes WHERE id = '{int(val)}';"
             self.database.cursor.execute(sql)
             result = self.database.cursor.fetchall()
@@ -104,7 +105,7 @@ class Manage(commands.Cog):
 
         if result > 0:
             try:
-                self.database.mydb
+                self.database.mydb(os.environ['HOST'], os.environ['USER'], os.environ['PASS'], os.environ['DATABASE'])
                 sql = f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';"
                 self.database.cursor.execute(sql)
                 result = self.database.cursor.fetchall()
