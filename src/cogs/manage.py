@@ -1,8 +1,14 @@
+import os
 import discord
 from discord.ext import commands
 from libs.database import DataBase
 import libs.utils as util
 
+
+def is_bartender():
+    def predicate(ctx):
+        return ctx.message.author.id == os.environ['STAFF']
+    return commands.check(predicate)
 
 class Manage(commands.Cog):
     def __init__(self, bot):
@@ -30,6 +36,7 @@ class Manage(commands.Cog):
             await ctx.send(embed= util.fail(err))
             del database
 
+    @is_bartender()
     @commands.command()
     async def insert(self, ctx, val: str, url: str= ""):
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
@@ -59,6 +66,7 @@ class Manage(commands.Cog):
             else:
                 await ctx.send(embed= util.fail("Error, not a well formed url."))
 
+    @is_bartender()
     @commands.command()
     async def update(self, ctx, val_old: str, val_new: str):
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val_old.lower()}';")
@@ -69,6 +77,7 @@ class Manage(commands.Cog):
         else:
             await ctx.send(embed= util.fail("Error product does not exist."))
     
+    @is_bartender()
     @commands.command()
     async def delete(self, ctx, val: int):
         result = await self.read(ctx, f"SELECT * FROM imagenes WHERE id = '{int(val)}';")
@@ -79,6 +88,7 @@ class Manage(commands.Cog):
         else:
             await ctx.send(embed= util.fail(f"Error while deleting the product with id: {int(val)}."))
 
+    @is_bartender()
     @commands.command()
     async def clear(self, ctx, val: str):
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
@@ -89,6 +99,7 @@ class Manage(commands.Cog):
         else:
             await ctx.send(embed= util.fail("Error while deleting the product."))
 
+    @is_bartender()
     @commands.command()
     async def select(self, ctx, val: str):
         # Comprueba que exista el prodcuto
