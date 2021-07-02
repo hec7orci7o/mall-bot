@@ -78,7 +78,7 @@ class Manage(commands.Cog):
 
     @commands.command()
     async def clear(self, ctx, val: str):
-        result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
+        result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
         print(result)
 
         if result == val.lower():
