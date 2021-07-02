@@ -86,7 +86,7 @@ class Manage(commands.Cog):
     @commands.command()
     async def select(self, ctx, val: str):
         # Comprueba que exista el prodcuto
-        result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
+        result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[2:-3]
 
         if result == val.lower():
             # Comprueba el numero de imagenes que existe para un producto
