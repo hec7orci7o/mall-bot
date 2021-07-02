@@ -27,7 +27,7 @@ class Manage(commands.Cog):
 
     @commands.command()
     async def insert(self, ctx, val: str, url: str= ""):
-        result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
+        result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
         print(result)
 
         # Producto ya existe
