@@ -33,13 +33,14 @@ class Manage(commands.Cog):
         # Producto ya existe
         if result == val.lower():
             print("existe")
-            # if result < 5 and util.is_url(url):
-            #     await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
-            #     await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
-            # elif result >= 5:
-            #     await ctx.send(embed= util.fail("Error, to much imgs for the same product."))
-            # else:
-            #     await ctx.send(embed= util.fail("Error, not a well formed url."))
+            result = int(str(await self.read(ctx, f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"))[2:-3])
+            if result < 5 and util.is_url(url):
+                await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+                await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
+            elif result >= 5:
+                await ctx.send(embed= util.fail("Error, to much imgs for the same product."))
+            else:
+                await ctx.send(embed= util.fail("Error, not a well formed url."))
 
         # Nuevo producto
         else:
