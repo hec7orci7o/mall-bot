@@ -7,7 +7,7 @@ import libs.utils as util
 
 def is_bartender():
     def predicate(ctx):
-        return ctx.message.author.id == os.environ['STAFF']
+        return ctx.message.author.id == int(os.environ['STAFF'])
     return commands.check(predicate)
 
 class Manage(commands.Cog):
