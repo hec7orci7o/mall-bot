@@ -1,37 +1,38 @@
 import discord
 from discord.ext import commands
-from libs.database import DataBase as db
+from libs.database import DataBase
 import libs.utils as util
 
 
 class Manage(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.database = DataBase()
 
     # Check producto registrado
     async def check(self,ctx, val: str):
         try:
-            database = db.DataBase()
+            self.database.mydb
             sql = f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"
-            database.cursor.execute(sql)
-            result = database.cursor.fetchall()
-            del database
-        except db.mysql.connector.Error as err:
+            self.database.cursor.execute(sql)
+            result = self.database.cursor.fetchall()
+            del self.database
+        except self.mysql.connector.Error as err:
             await ctx.send(embed= util.fail(err))
-            del database
+            del self.database
             
         print(str(result)[2:-3])
         return int(str(result)[2:-3])
 
     async def write(self, ctx, sql):
         try:
-            database = db.DataBase()
-            database.cursor.execute(sql)
-            database.mydb.commit()
-            del database
-        except db.mysql.connector.Error as err:
+            self.database.mydb
+            self.database.cursor.execute(sql)
+            self.database.mydb.commit()
+            del self.database
+        except self.mysql.connector.Error as err:
             await ctx.send(embed= util.fail(err))
-            del database
+            del self.database
 
     @commands.command()
     async def insert(self, ctx, val: str, url: str= ""):
@@ -72,14 +73,14 @@ class Manage(commands.Cog):
     @commands.command()
     async def delete(self, ctx, val: int):
         try:
-            database = db.DataBase()
+            self.database.mydb
             sql = f"SELECT * FROM imagenes WHERE id = '{int(val)}';"
-            database.cursor.execute(sql)
-            result = database.cursor.fetchall()
-            del database
-        except db.mysql.connector.Error as err:
+            self.database.cursor.execute(sql)
+            result = self.database.cursor.fetchall()
+            del self.database
+        except self.mysql.connector.Error as err:
                 await ctx.send(embed= util.fail(err))
-                del database
+                del self.database
 
         if result != []:
             await self.write(ctx, f"DELETE FROM imagenes WHERE id = {int(val)};")
@@ -103,14 +104,14 @@ class Manage(commands.Cog):
 
         if result > 0:
             try:
-                database = db.DataBase()
+                self.database.mydb
                 sql = f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';"
                 self.database.cursor.execute(sql)
                 result = self.database.cursor.fetchall()
-                del database
+                del self.database
             except self.mysql.connector.Error as err:
                 await ctx.send(embed= util.fail(err))
-                del database
+                del self.database
 
             iter = 1
             max_items = len(result)
