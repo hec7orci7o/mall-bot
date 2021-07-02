@@ -31,11 +31,8 @@ class Manage(commands.Cog):
             del self.database
             self.database = DataBase()
 
-    @commands.command()
-    async def insert(self, ctx, val: str, url= ""):
-        result = await self.check(ctx, val)
-
-        # Producto registrado + img disponible
+    """
+    # Producto registrado + img disponible
         if result > 0 and result < 5 and url != "":
             if util.is_url(url):
                 await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
@@ -59,8 +56,34 @@ class Manage(commands.Cog):
         # Producto no registrado + imagen no disponible
         else:
             await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
-            embed = util.success(f"New product: {val.lower()}")
             await ctx.send(embed=embed)
+    """
+
+    @commands.command()
+    async def insert(self, ctx, val: str, url: str= ""):
+        result = await self.check(ctx, val)
+        print(result)   # debug
+        # Nuevo producto
+        if result == 0:
+            if url == "":
+                await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
+                await ctx.send(embed= util.success(f"New product: {val.lower()}"))
+            elif util.is_url(url):
+                await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
+                await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+                await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
+            else:
+                await ctx.send(embed= util.fail("Error, not a well formed url."))
+
+        # Nueva representacion (img) del producto
+        elif result > 0:
+            if result < 5 and util.is_url(url):
+                await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+                await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
+            elif result >= 5:
+                await ctx.send(embed= util.fail("Error, to much imgs for the same product."))
+            else:
+                await ctx.send(embed= util.fail("Error, not a well formed url."))
 
     @commands.command()
     async def update(self, ctx, val_old: str, val_new: str):
