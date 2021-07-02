@@ -60,7 +60,8 @@ class Bartender(helper.Helper, commands.Cog):
     async def carta(self, ctx):
         menu = [("🥛","sin alcohol"),("🍺","con alcohol"),("🥩","carne"),("🍣","pescado"),("🍨","postres"),("🥜","tapas"),("🍭","chuches")]
         menu_formated = ''
-        menu_formated += menu[iter][0] + ' - ' + menu[iter][1] + '.\n'
+        for cat in menu:
+            menu_formated += cat[0] + ' - ' + cat[1] + '.\n'
 
         embed = discord.Embed(description=f"```c++\n{menu_formated}```", color=9224068)
         embed.set_author(name="Sections:", icon_url="https://static.vecteezy.com/system/resources/previews/000/639/289/original/vector-menu-icon-symbol-sign.jpg")
