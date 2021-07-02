@@ -28,23 +28,20 @@ class Manage(commands.Cog):
     @commands.command()
     async def insert(self, ctx, val: str, url: str= ""):
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
-        print(result)
 
         # Producto ya existe
         if result == val.lower():
-            print("existe")
             result = int(str(await self.read(ctx, f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"))[2:-3])
             if result < 5 and util.is_url(url):
                 await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
-                await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
+                await ctx.send(embed= util.success(f"New image for: {val.lower()}\n{5-result}/5"))
             elif result >= 5:
-                await ctx.send(embed= util.fail("Error, to much imgs for the same product."))
+                await ctx.send(embed= util.fail("Error, to much imgs for the same product.\n5/5 imgs"))
             else:
                 await ctx.send(embed= util.fail("Error, not a well formed url."))
 
         # Nuevo producto
         else:
-            print("no existe")
             if url == "":
                 await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
                 await ctx.send(embed= util.success(f"New product: {val.lower()}"))
@@ -58,7 +55,6 @@ class Manage(commands.Cog):
     @commands.command()
     async def update(self, ctx, val_old: str, val_new: str):
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val_old.lower()}';")
-        print(result)
 
         if result != []:
             await self.write(ctx, f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';")
@@ -69,7 +65,6 @@ class Manage(commands.Cog):
     @commands.command()
     async def delete(self, ctx, val: int):
         result = await self.read(ctx, f"SELECT * FROM imagenes WHERE id = '{int(val)}';")
-        print(result)
 
         if result != []:
             await self.write(ctx, f"DELETE FROM imagenes WHERE id = {int(val)};")
@@ -80,7 +75,6 @@ class Manage(commands.Cog):
     @commands.command()
     async def clear(self, ctx, val: str):
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
-        print(result)
 
         if result == val.lower():
             await self.write(ctx, f"DELETE FROM productos WHERE nombre = '{val.lower()}';")
@@ -92,12 +86,10 @@ class Manage(commands.Cog):
     async def select(self, ctx, val: str):
         # Comprueba que exista el prodcuto
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
-        print(result)
 
         if result == val.lower():
             # Comprueba el numero de imagenes que existe para un producto
             result = int(str(await self.read(ctx, f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"))[2:-3])
-            print(result)
             if result == 0:
                 embed = discord.Embed(description=f"IDs related to {val.lower()}:\n```c++\nNo images has been added yet.```", color=9224068)
                 embed.set_author(name="SQL query", icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
@@ -105,7 +97,6 @@ class Manage(commands.Cog):
             
             else:
                 result = await self.read(ctx, f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';")
-                print(result)
                 iter, max_items, text = 1, len(result), ""
                 for row in result:
                     if iter == 5 or iter == max_items:  text += str(row[0]) + '.'
