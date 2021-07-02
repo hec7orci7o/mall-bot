@@ -11,5 +11,5 @@ class DataBase():
         self.cursor = self.mydb.cursor()
 
     def __del__(self):
-        self.database.close()
+        self.mydb.close()
                 
