@@ -61,12 +61,14 @@ class Bartender(helper.Helper, commands.Cog):
         menu = [("🥛","sin alcohol"),("🍺","con alcohol"),("🥩","carne"),("🍣","pescado"),("🍨","postres"),("🥜","tapas"),("🍭","chuches")]
         menu_formated = ''
         for cat in menu:
-            menu_formated += cat[0] + ' - ' + cat[1] + '.\n'
+            menu_formated += cat[0] + '\t- ' + cat[1] + '.\n'
 
-        embed = discord.Embed(description=f"```c++\n{menu_formated}```", color=9224068)
+        embed = discord.Embed(description=f"```{menu_formated}```", color=9224068)
         embed.set_author(name="Sections:", icon_url="https://static.vecteezy.com/system/resources/previews/000/639/289/original/vector-menu-icon-symbol-sign.jpg")
         embed.set_footer(text="Made with 💘 by Hec7orci7o.", icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
-        await ctx.send(embed= embed)
+        message = await ctx.send(embed= embed)
+        for reaction in ['🥛', '🍺','🥩','🍣','🍨','🥜','🍭']:
+            await message.add_reaction(reaction)
         # query que muestra todas las categorias
         # añadir reacciones con los tipos de categoria
             # escoger siguiente pagina a mostrar (ej : bebidas sin alcohol)
