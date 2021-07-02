@@ -39,7 +39,7 @@ class Manage(commands.Cog):
             result = int(str(await self.read(ctx, f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"))[2:-3])
             if result < 5 and util.is_url(url):
                 await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
-                await ctx.send(embed= util.success(f"New image for: {val.lower()}\n{5-result}/5"))
+                await ctx.send(embed= util.success(f"New image for: {val.lower()}\n{5-(result+1)}/5 spaces available"))
             elif result >= 5:
                 await ctx.send(embed= util.fail("Error, to much imgs for the same product.\n5/5 imgs"))
             elif url == "":
