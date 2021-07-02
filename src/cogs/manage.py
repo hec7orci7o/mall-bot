@@ -44,15 +44,15 @@ class Manage(commands.Cog):
         # Nuevo producto
         else:
             print("no existe")
-            # if url == "":
-            #     await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
-            #     await ctx.send(embed= util.success(f"New product: {val.lower()}"))
-            # elif util.is_url(url):
-            #     await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
-            #     await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
-            #     await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
-            # else:
-            #     await ctx.send(embed= util.fail("Error, not a well formed url."))
+            if url == "":
+                await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
+                await ctx.send(embed= util.success(f"New product: {val.lower()}"))
+            elif util.is_url(url):
+                await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
+                await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+                await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
+            else:
+                await ctx.send(embed= util.fail("Error, not a well formed url."))
 
     @commands.command()
     async def update(self, ctx, val_old: str, val_new: str):
