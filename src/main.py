@@ -51,7 +51,7 @@ class MallBot(commands.Bot):
         await channel.send(embed=embed)
         print('Logged on as {0}!'.format(self.user))
 
-client = MallBot(command_prefix='$', help_command=commands.BotHelpCommand())
+client = MallBot(command_prefix='$', help_command=BotHelpCommand())
 
 # Cogs
 for filename in os.listdir('src/cogs'):
