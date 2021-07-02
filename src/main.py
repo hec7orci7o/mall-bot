@@ -7,7 +7,7 @@ from discord.embeds import Embed
 from discord.ext import commands
 from discord.ext.commands.core import command
 
-class HelpCommand(commands.HelpCommand):
+class BotHelpCommand(commands.HelpCommand):
     def __init__(self):
         super().__init__()
     
@@ -51,7 +51,7 @@ class MallBot(commands.Bot):
         await channel.send(embed=embed)
         print('Logged on as {0}!'.format(self.user))
 
-client = MallBot(command_prefix='$', help_command=commands.HelpCommand())
+client = MallBot(command_prefix='$', help_command=commands.BotHelpCommand())
 
 # Cogs
 for filename in os.listdir('src/cogs'):
