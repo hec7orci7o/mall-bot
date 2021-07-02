@@ -2,6 +2,7 @@ import os
 import random
 import asyncio
 import discord
+import libs.utils as util
 from discord.ext import commands
 from libs.database import DataBase
 import libs.utils as util
@@ -27,7 +28,7 @@ class Bartender(commands.Cog):
                 del database
 
         if result == []:
-            await ctx.send(f"Sry, there are not products registered with the name: {val.lower()}")
+            await ctx.send(embed= util.fail(f"Sry, there are not products registered with the name: {val.lower()}"))
         else:
             # Check disponibilidad del producto registrado
             try:
@@ -41,7 +42,7 @@ class Bartender(commands.Cog):
                 del database
 
             if result == []:
-                await ctx.send(f"Sry, there are not enought {val.lower()}")
+                await ctx.send(embed= util.fail(f"Sry, there are not enought {val.lower()}"))
             else:
                 await self.get_item(ctx, val.lower(), result)
     

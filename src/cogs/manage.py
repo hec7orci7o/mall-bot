@@ -1,8 +1,8 @@
 import os
 import discord
+import libs.utils as util
 from discord.ext import commands
 from libs.database import DataBase
-import libs.utils as util
 
 
 def is_bartender():
