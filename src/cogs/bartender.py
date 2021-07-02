@@ -56,6 +56,7 @@ class Bartender(helper.Helper, commands.Cog):
         for reaction in ['👍', '👎']:
             await message.add_reaction(reaction)
 
+    @commands.command()
     async def carta(self, ctx):
         menu = [("🥛","sin alcohol"),("🍺","con alcohol"),("🥩","carne"),("🍣","pescado"),("🍨","postres"),("🥜","tapas"),("🍭","chuches")]
         menu_formated = ''
