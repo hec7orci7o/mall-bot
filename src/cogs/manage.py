@@ -7,23 +7,28 @@ import libs.utils as util
 class Manage(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.database = DataBase()
 
     # sql = f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"
     async def read(self, ctx, sql):
         try:
-            self.database.cursor.execute(sql)
-            result = self.database.cursor.fetchall()
-        except self.mysql.connector.Error as err:
+            database = DataBase()
+            database.cursor.execute(sql)
+            result = database.cursor.fetchall()
+            del database
+        except database.mysql.connector.Error as err:
             await ctx.send(embed= util.fail(err))
+            del database
         return result
 
     async def write(self, ctx, sql):
         try:
-            self.database.cursor.execute(sql)
-            self.database.mydb.commit()
-        except self.mysql.connector.Error as err:
+            database = DataBase()
+            database.cursor.execute(sql)
+            database.mydb.commit()
+            del database
+        except database.mysql.connector.Error as err:
             await ctx.send(embed= util.fail(err))
+            del database
 
     @commands.command()
     async def insert(self, ctx, val: str, url: str= ""):
@@ -37,6 +42,8 @@ class Manage(commands.Cog):
                 await ctx.send(embed= util.success(f"New image for: {val.lower()}\n{5-result}/5"))
             elif result >= 5:
                 await ctx.send(embed= util.fail("Error, to much imgs for the same product.\n5/5 imgs"))
+            elif url == "":
+                await ctx.send(embed= util.fail("Error, product already exist."))
             else:
                 await ctx.send(embed= util.fail("Error, not a well formed url."))
 
