@@ -90,7 +90,7 @@ class Manage(commands.Cog):
     @commands.command()
     async def select(self, ctx, val: str):
         # Comprueba que exista el prodcuto
-        result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
+        result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
         print(result)
 
         if result == val.lower():
