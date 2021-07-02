@@ -37,3 +37,4 @@ def success(success: str):
         icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4"
     )
     return embed
+    

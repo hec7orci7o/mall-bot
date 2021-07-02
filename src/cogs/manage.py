@@ -1,63 +1,37 @@
 import discord
 from discord.ext import commands
-from libs.database import DataBase
+from libs.database import DataBase as db
 import libs.utils as util
 
 
 class Manage(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.database = DataBase()
 
     # Check producto registrado
-    async def check(self, ctx, val: str):
+    async def check(self,ctx, val: str):
         try:
+            database = db.DataBase()
             sql = f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"
-            self.database.cursor.execute(sql)
-            result = self.database.cursor.fetchall()
-        except self.mysql.connector.Error as err:
+            database.cursor.execute(sql)
+            result = database.cursor.fetchall()
+            del database
+        except db.mysql.connector.Error as err:
             await ctx.send(embed= util.fail(err))
-            del self.database
-            self.database = DataBase()
+            del database
+            
         print(str(result)[2:-3])
         return int(str(result)[2:-3])
 
     async def write(self, ctx, sql):
         try:
-            self.database.cursor.execute(sql)
-            self.database.mydb.commit()
-        except self.mysql.connector.Error as err:
+            database = db.DataBase()
+            database.cursor.execute(sql)
+            database.mydb.commit()
+            del database
+        except db.mysql.connector.Error as err:
             await ctx.send(embed= util.fail(err))
-            del self.database
-            self.database = DataBase()
-
-    """
-    # Producto registrado + img disponible
-        if result > 0 and result < 5 and url != "":
-            if util.is_url(url):
-                await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
-                await ctx.send(embed= util.success(f"New image for: {val.lower()}\nImages left:{5-result}/5"))
-            else:
-                await ctx.send(embed= util.fail("Error, not a well formed url."))
-
-        # Producto registrado + imagen no disponible
-        elif result > 0 and url == "":
-            await ctx.send(embed= util.fail("Product already exist."))
-
-        # Producto no registrado + imagen disponible
-        elif result == 0 and url != "":
-            if util.is_url(url):
-                await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
-                await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
-                await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
-            else:
-                await ctx.send(embed= util.fail("Error, not a well formed url."))
-
-        # Producto no registrado + imagen no disponible
-        else:
-            await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
-            await ctx.send(embed=embed)
-    """
+            del database
 
     @commands.command()
     async def insert(self, ctx, val: str, url: str= ""):
@@ -98,11 +72,14 @@ class Manage(commands.Cog):
     @commands.command()
     async def delete(self, ctx, val: int):
         try:
+            database = db.DataBase()
             sql = f"SELECT * FROM imagenes WHERE id = '{int(val)}';"
-            self.database.cursor.execute(sql)
-            result = self.database.cursor.fetchall()
-        except self.mysql.connector.Error as err:
-                print(err)
+            database.cursor.execute(sql)
+            result = database.cursor.fetchall()
+            del database
+        except db.mysql.connector.Error as err:
+                await ctx.send(embed= util.fail(err))
+                del database
 
         if result != []:
             await self.write(ctx, f"DELETE FROM imagenes WHERE id = {int(val)};")
@@ -126,11 +103,14 @@ class Manage(commands.Cog):
 
         if result > 0:
             try:
+                database = db.DataBase()
                 sql = f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';"
                 self.database.cursor.execute(sql)
                 result = self.database.cursor.fetchall()
+                del database
             except self.mysql.connector.Error as err:
-                print(err)
+                await ctx.send(embed= util.fail(err))
+                del database
 
             iter = 1
             max_items = len(result)
