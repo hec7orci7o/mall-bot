@@ -54,12 +54,20 @@ class Bartender(helper.Helper, commands.Cog):
         embed.set_footer(text= "Made with 💘 by Hec7orci7o.", icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
         
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE categoria = '{categoria.lower()}';")
+        num_products = len(result)
         if result != []:
-            _s = int((len(result) / 3) + 1)
-            p_page_1, p_page_2, p_page_3 = "", "", ""
-            for elem in result[:_s]:     p_page_1 += f"• {str(elem)[2:-3]}\n"
-            for elem in result[_s:2*_s]: p_page_2 += f"• {str(elem)[2:-3]}\n"
-            for elem in result[2*_s:]:   p_page_3 += f"• {str(elem)[2:-3]}\n"
+            if num_products == 1:
+                p_page_1 = f"• {str(result[0])[2:-3]}\n"
+                p_page_2, p_page_3 = "---", "---"
+            elif num_products == 2:
+                p_page_1, p_page_2 = f"• {str(result[0])[2:-3]}\n", f"• {str(result[0])[2:-3]}\n"
+                p_page_3 = "---", "---"
+            else:
+                _s = int((len(result) / 3) + 1)
+                p_page_1, p_page_2, p_page_3 = "", "", ""
+                for elem in result[:_s]:     p_page_1 += f"• {str(elem)[2:-3]}\n"
+                for elem in result[_s:2*_s]: p_page_2 += f"• {str(elem)[2:-3]}\n"
+                for elem in result[2*_s:]:   p_page_3 += f"• {str(elem)[2:-3]}\n"
 
 
             embed.add_field(name="Page 1.",value=f"{p_page_1}",inline=True)
