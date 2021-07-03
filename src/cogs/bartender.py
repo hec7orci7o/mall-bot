@@ -60,7 +60,7 @@ class Bartender(helper.Helper, commands.Cog):
                 p_page_1 = f"• {str(result[0])[2:-3]}\n"
                 p_page_2, p_page_3 = "---", "---"
             elif num_products == 2:
-                p_page_1, p_page_2 = f"• {str(result[0])[2:-3]}\n", f"• {str(result[0])[2:-3]}\n"
+                p_page_1, p_page_2 = f"• {str(result[0])[2:-3]}\n", f"• {str(result[1])[2:-3]}\n"
                 p_page_3 = "---", "---"
             else:
                 _s = int((len(result) / 3) + 1)
