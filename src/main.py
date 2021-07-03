@@ -1,11 +1,7 @@
 import os
 import datetime
 import discord
-from discord import widget
-from discord import channel
-from discord.embeds import Embed
 from discord.ext import commands
-from discord.ext.commands.core import command
 
 class BotHelpCommand(commands.HelpCommand):
     def __init__(self):

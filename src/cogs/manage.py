@@ -4,8 +4,6 @@ import libs.utils as util
 import libs.helper as helper
 from discord.ext import commands
 
-
-
 def is_bartender():
     def predicate(ctx):
         return ctx.message.author.id == int(os.environ['STAFF'])
@@ -91,7 +89,6 @@ class Manage(helper.Helper, commands.Cog):
                 embed = discord.Embed(description=f"IDs related to {val.lower()}:\n```c++\nNo images has been added yet.```", color=9224068)
                 embed.set_author(name="SQL query", icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
                 embed.set_footer(text="Made with 💘 by Hec7orci7o.", icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
-            
             else:
                 result = await self.read(ctx, f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';")
                 iter, max_items, text = 1, len(result), ""
