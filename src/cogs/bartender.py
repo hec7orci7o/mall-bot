@@ -61,7 +61,7 @@ class Bartender(helper.Helper, commands.Cog):
         menu = [("🥛","sin alcohol"),("🍺","con alcohol"),("🥩","carne"),("🍣","pescado"),("🍨","postres"),("🥜","tapas"),("🍭","chuches")]
         menu_formated = ''
         for cat in menu:
-            menu_formated += cat[0] + '\t- ' + cat[1] + '.\n'
+            menu_formated += cat[0] + ' - ' + cat[1] + '.\n'
 
         embed = discord.Embed(description=f"```{menu_formated}```", color=9224068)
         embed.set_author(name="Sections:", icon_url="https://static.vecteezy.com/system/resources/previews/000/639/289/original/vector-menu-icon-symbol-sign.jpg")
@@ -69,12 +69,37 @@ class Bartender(helper.Helper, commands.Cog):
         message = await ctx.send(embed= embed)
         for reaction in ['🥛', '🍺','🥩','🍣','🍨','🥜','🍭']:
             await message.add_reaction(reaction)
+        
+
+        def check(reaction, user):
+            if user == ctx.author and str(reaction.emoji) in ['🥛', '🍺','🥩','🍣','🍨','🥜','🍭']:
+                return str(reaction.emoji)
+            else:
+                return ""
+
+        reaction, user = await commands.wait_for('reaction_add', timeout=60.0, check=check)
+
+        if reaction.emoji == "🥛":
+            await ctx.send("sin alcohol")
+        elif reaction.emoji == "🍺":
+            await ctx.send("con alcohol")
+        elif reaction.emoji == "🥩":
+            await ctx.send("carne")
+        elif reaction.emoji == "🍣":
+            await ctx.send("pescado")
+        elif reaction.emoji == "🍨":
+            await ctx.send("postres")
+        elif reaction.emoji == "🥜":
+            await ctx.send("tapas")
+        elif reaction.emoji == "🍭":
+            await ctx.send("cuches")
+        # https://stackoverflow.com/questions/52210855/give-role-when-a-user-add-reaction-discord-py
+        
         # query que muestra todas las categorias
         # añadir reacciones con los tipos de categoria
             # escoger siguiente pagina a mostrar (ej : bebidas sin alcohol)
         # borrar embed anterior y mostrar el siguiente. Mostrar 5 productos en 3 columnas (5 5 5) 
             # y si hay mas mostrar un boton de paginacion avanzar y retroceder abajo
-        pass
     
 def setup(bot):
     bot.add_cog(Bartender(bot))
