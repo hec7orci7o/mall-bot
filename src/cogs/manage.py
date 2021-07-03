@@ -15,7 +15,7 @@ class Manage(helper.Helper, commands.Cog):
 
     @is_bartender()
     @commands.command()
-    async def insert(self, ctx, val: str, url: str= ""):
+    async def insert(self, ctx, val: str, cat: str, url: str= ""):
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
 
         # Producto ya existe
@@ -34,10 +34,10 @@ class Manage(helper.Helper, commands.Cog):
         # Nuevo producto
         else:
             if url == "":
-                await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
+                await self.write(ctx, f"INSERT INTO productos (nombre, categoria) VALUES ('{val.lower()}','{cat.lower()}');")
                 await ctx.send(embed= util.success(f"New product: {val.lower()}"))
             elif util.is_url(url):
-                await self.write(ctx, f"INSERT INTO productos (nombre) VALUES ('{val.lower()}');")
+                await self.write(ctx, f"INSERT INTO productos (nombre, categoria) VALUES ('{val.lower()}','{cat.lower()}');")
                 await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
                 await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
             else:
@@ -45,12 +45,23 @@ class Manage(helper.Helper, commands.Cog):
 
     @is_bartender()
     @commands.command()
-    async def update(self, ctx, val_old: str, val_new: str):
+    async def update_name(self, ctx, val_old: str, val_new: str):
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val_old.lower()}';")
 
         if result != []:
             await self.write(ctx, f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';")
             await ctx.send(embed= util.success(f"Name changed to: {val_new.capitalize()}"))
+        else:
+            await ctx.send(embed= util.fail("Error product does not exist."))
+
+    @is_bartender()
+    @commands.command()
+    async def update_category(self, ctx, val, cat_new: str):
+        result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
+
+        if result != []:
+            await self.write(ctx, f"UPDATE productos SET categoria = '{cat_new.lower()}' WHERE nombre = '{val.lower()}';")
+            await ctx.send(embed= util.success(f"category for {val.lower()} changed to: {cat_new.capitalize()}"))
         else:
             await ctx.send(embed= util.fail("Error product does not exist."))
     
