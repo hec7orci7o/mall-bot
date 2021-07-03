@@ -16,32 +16,36 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def insert(self, ctx, val: str, cat: str, url: str= ""):
-        result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
+        result = str(await self.read(ctx, f"SELECT * FROM categorias WHERE categoria = '{cat.lower()}';"))[3:-4]
+        if result != []:
+            result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
 
-        # Producto ya existe
-        if result == val.lower():
-            result = int(str(await self.read(ctx, f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"))[2:-3])
-            if result < 5 and util.is_url(url):
-                await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
-                await ctx.send(embed= util.success(f"New image for: {val.lower()}\n{5-(result+1)}/5 spaces available"))
-            elif result >= 5:
-                await ctx.send(embed= util.fail("Error, to much imgs for the same product.\n5/5 imgs"))
-            elif url == "":
-                await ctx.send(embed= util.fail("Error, product already exist."))
+            # Producto ya existe
+            if result == val.lower():
+                result = int(str(await self.read(ctx, f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"))[2:-3])
+                if result < 5 and util.is_url(url):
+                    await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+                    await ctx.send(embed= util.success(f"New image for: {val.lower()}\n{5-(result+1)}/5 spaces available"))
+                elif result >= 5:
+                    await ctx.send(embed= util.fail("Error, to much imgs for the same product.\n5/5 imgs"))
+                elif url == "":
+                    await ctx.send(embed= util.fail("Error, product already exist."))
+                else:
+                    await ctx.send(embed= util.fail("Error, not a well formed url."))
+
+            # Nuevo producto
             else:
-                await ctx.send(embed= util.fail("Error, not a well formed url."))
-
-        # Nuevo producto
+                if url == "":
+                    await self.write(ctx, f"INSERT INTO productos (nombre, categoria) VALUES ('{val.lower()}','{cat.lower()}');")
+                    await ctx.send(embed= util.success(f"New product: {val.lower()}"))
+                elif util.is_url(url):
+                    await self.write(ctx, f"INSERT INTO productos (nombre, categoria) VALUES ('{val.lower()}','{cat.lower()}');")
+                    await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
+                    await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
+                else:
+                    await ctx.send(embed= util.fail("Error, not a well formed url."))
         else:
-            if url == "":
-                await self.write(ctx, f"INSERT INTO productos (nombre, categoria) VALUES ('{val.lower()}','{cat.lower()}');")
-                await ctx.send(embed= util.success(f"New product: {val.lower()}"))
-            elif util.is_url(url):
-                await self.write(ctx, f"INSERT INTO productos (nombre, categoria) VALUES ('{val.lower()}','{cat.lower()}');")
-                await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
-                await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
-            else:
-                await ctx.send(embed= util.fail("Error, not a well formed url."))
+            await ctx.send(embed= util.fail("Error, category does not exist"))
 
     @is_bartender()
     @commands.command()
