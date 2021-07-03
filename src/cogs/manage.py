@@ -17,6 +17,7 @@ class Manage(helper.Helper, commands.Cog):
     @commands.command()
     async def insert(self, ctx, val: str, cat: str, url: str= ""):
         result = str(await self.read(ctx, f"SELECT * FROM categorias WHERE nombre = '{cat.lower()}';"))[3:-4]
+        print(result)
         if result != []:
             result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
 
