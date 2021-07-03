@@ -56,6 +56,27 @@ class Bartender(helper.Helper, commands.Cog):
         for reaction in ['👍', '👎']:
             await message.add_reaction(reaction)
 
+    async def pagina(self, ctx, emoji: str, categoria: str):
+        embed = discord.Embed(
+              description=f"```Haz tu pedido asi:\n$order <producto>```",
+             color=14579829)
+        embed.set_author(name=f"{emoji} - {categoria}",icon_url="https://images.unsplash.com/photo-1590486145851-aae8758c4211?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80")
+        embed.set_footer(text="Made with 💘 by Hec7orci7o.",icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
+        
+        result = await self.read(ctx, f"select nombre from productos where categoria = '{categoria.lower()}';")
+        _s = int((len(result) / 3) + 1)
+        l_p_page_1, l_p_page_2, l_p_page_3 = result[:_s], result[_s:2*_s], result[2*_s:]
+        p_page_1, p_page_2, p_page_3 = "", "", ""
+        for elem in l_p_page_1: p_page_1 += f"• {str(elem)[2:-3]}\n"
+        for elem in l_p_page_2: p_page_2 += f"• {str(elem)[2:-3]}\n"
+        for elem in l_p_page_3: p_page_3 += f"• {str(elem)[2:-3]}\n"
+
+
+        embed.add_field(name="Page 1.",value=f"{p_page_1}",inline=True)
+        embed.add_field(name="Page 2.",value=f"{p_page_2}",inline=True)
+        embed.add_field(name="Page 3.",value=f"{p_page_3}",inline=True)
+        return embed
+
     @commands.command()
     async def carta(self, ctx):
         menu = [("🥛","sin alcohol"),("🍺","con alcohol"),("🥩","carne"),("🍣","pescado"),("🍨","postres"),("🥜","tapas"),("🍭","chuches")]
@@ -69,37 +90,32 @@ class Bartender(helper.Helper, commands.Cog):
         message = await ctx.send(embed= embed)
         for reaction in ['🥛', '🍺','🥩','🍣','🍨','🥜','🍭']:
             await message.add_reaction(reaction)
-        
 
         def check(reaction, user):
-            if user == ctx.author and str(reaction.emoji) in ['🥛', '🍺','🥩','🍣','🍨','🥜','🍭']:
-                return str(reaction.emoji)
-            else:
-                return ""
+            return user == ctx.author and str(reaction.emoji) in ['🥛', '🍺','🥩','🍣','🍨','🥜','🍭']
+        reaction, user = await self.bot.wait_for('reaction_add', timeout=60.0, check=check)
 
-        reaction, user = await commands.wait_for('reaction_add', timeout=60.0, check=check)
-
-        if reaction.emoji == "🥛":
-            await ctx.send("sin alcohol")
-        elif reaction.emoji == "🍺":
-            await ctx.send("con alcohol")
-        elif reaction.emoji == "🥩":
-            await ctx.send("carne")
-        elif reaction.emoji == "🍣":
-            await ctx.send("pescado")
-        elif reaction.emoji == "🍨":
-            await ctx.send("postres")
-        elif reaction.emoji == "🥜":
-            await ctx.send("tapas")
-        elif reaction.emoji == "🍭":
-            await ctx.send("cuches")
-        # https://stackoverflow.com/questions/52210855/give-role-when-a-user-add-reaction-discord-py
-        
-        # query que muestra todas las categorias
-        # añadir reacciones con los tipos de categoria
-            # escoger siguiente pagina a mostrar (ej : bebidas sin alcohol)
-        # borrar embed anterior y mostrar el siguiente. Mostrar 5 productos en 3 columnas (5 5 5) 
-            # y si hay mas mostrar un boton de paginacion avanzar y retroceder abajo
+        if str(reaction.emoji) == "🥛":
+            await message.delete()
+            await ctx.send(embed = await self.pagina(ctx, "🥛", str(menu[0][1])))
+        elif str(reaction.emoji) == "🍺":
+            await message.delete()
+            await ctx.send(embed = await self.pagina(ctx, "🍺", str(menu[1][1])))
+        elif str(reaction.emoji) == "🥩":
+            await message.delete()
+            await ctx.send(embed = await self.pagina(ctx, "🥩", str(menu[2][1])))
+        elif str(reaction.emoji) == "🍣":
+            await message.delete()
+            await ctx.send(embed = await self.pagina(ctx, "🍣", str(menu[3][1])))
+        elif str(reaction.emoji) == "🍨":
+            await message.delete()
+            await ctx.send(embed = await self.pagina(ctx, "🍨", str(menu[4][1])))
+        elif str(reaction.emoji) == "🥜":
+            await message.delete()
+            await ctx.send(embed = await self.pagina(ctx, "🥜", str(menu[5][1])))
+        elif str(reaction.emoji) == "🍭":
+            await message.delete()
+            await ctx.send(embed = await self.pagina(ctx, "🍭", str(menu[6][1])))
     
 def setup(bot):
     bot.add_cog(Bartender(bot))
