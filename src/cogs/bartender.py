@@ -49,11 +49,15 @@ class Bartender(helper.Helper, commands.Cog):
             await message.add_reaction(reaction)
 
     async def pagina(self, ctx, emoji: str, categoria: str):
-        embed = discord.Embed(description= f"```Haz tu pedido asi:\n$order <producto>```", color= 14579829)
+        result = await self.read(ctx, f"SELECT nombre FROM productos WHERE categoria = '{categoria.lower()}';")
+        if result != []:
+            embed = discord.Embed(description= f"```Haz tu pedido asi:\n$order <producto>```", color= 14579829)
+        else:
+            embed = discord.Embed(description= f"```No products have been added yet.```", color= 14579829)
+        
         embed.set_author(name= f"{emoji} - {categoria}", icon_url= "https://images.unsplash.com/photo-1590486145851-aae8758c4211?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80")
         embed.set_footer(text= "Made with 💘 by Hec7orci7o.", icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
         
-        result = await self.read(ctx, f"SELECT nombre FROM productos WHERE categoria = '{categoria.lower()}';")
         num_products = len(result)
         if result != []:
             if num_products == 1:
@@ -75,7 +79,7 @@ class Bartender(helper.Helper, commands.Cog):
             embed.add_field(name="Page 3.",value=f"{p_page_3}",inline=True)
             return embed
         else:
-            return util.fail("No products have been added yet to this category.")
+            return embed
 
 
     @commands.command()
