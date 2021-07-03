@@ -66,7 +66,11 @@ class Bartender(helper.Helper, commands.Cog):
                 p_page_2, p_page_3 = "---", "---"
             elif num_products == 2:
                 p_page_1, p_page_2 = f"• {str(result[0])[2:-3]}\n", f"• {str(result[1])[2:-3]}\n"
-                p_page_3 = "---", "---"
+                p_page_3 = "---"
+            elif num_products == 3:
+                p_page_1, p_page_2, p_page_3 = f"• {str(result[0])[2:-3]}\n", f"• {str(result[1])[2:-3]}\n", f"• {str(result[2])[2:-3]}\n"
+            elif num_products == 4:
+                p_page_1, p_page_2, p_page_3 = f"• {str(result[0])[2:-3]}\n• {str(result[3])[2:-3]}", f"• {str(result[1])[2:-3]}\n", f"• {str(result[2])[2:-3]}\n"
             else:
                 _s = int((len(result) / 3) + 1)
                 p_page_1, p_page_2, p_page_3 = "", "", ""
@@ -86,7 +90,7 @@ class Bartender(helper.Helper, commands.Cog):
     @commands.command()
     async def carta(self, ctx):
         emojis = ["🥛", "🍺","🥩","🍣","🍨","🥜","🍭"]
-        menu = [(emojis[0],"sin alcohol"),(emojis[1],"con alcohol"),(emojis[2],"carne"),(emojis[3],"pescado"),(emojis[4],"postres"),(emojis[5],"tapas"),(emojis[6],"chuches")]
+        menu = [(emojis[0],"sin alcohol"),(emojis[1],"con alcohol"),(emojis[2],"carnes"),(emojis[3],"pescados"),(emojis[4],"postres"),(emojis[5],"tapas"),(emojis[6],"chuches")]
         menu_formated = ''
         for cat in menu:
             menu_formated += cat[0] + ' - ' + cat[1] + '.\n'
