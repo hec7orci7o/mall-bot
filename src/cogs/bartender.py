@@ -45,7 +45,7 @@ class Bartender(helper.Helper, commands.Cog):
         )
         message = await ctx.send(embed = embed)
         await ctx.trigger_typing()
-        await asyncio.sleep(5)
+        await asyncio.sleep(3.5)
         embed = discord.Embed (
             title = f"{msg_2}",
             color = 16777215
