@@ -3,7 +3,7 @@ import discord
 from urllib.parse import urlparse
 from googletrans import Translator
 
-def translate(txt: str, dest:str):
+def translate(txt: str, dest:str = 'en'):
     translator = Translator()
     traduccion = str(translator.translate(text= txt, dest= dest).text)
     del translator
