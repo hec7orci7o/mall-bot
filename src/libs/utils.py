@@ -1,5 +1,11 @@
+import os
 import discord
 from urllib.parse import urlparse
+from googletrans import Translator
+
+def translate(txt: str):
+    translator = Translator()
+    return str(translator.translate(text= txt, dest= os.environ['LANG']).text)
 
 def is_url(url: str):
     try:
