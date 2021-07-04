@@ -37,11 +37,11 @@ class Bartender(helper.Helper, commands.Cog):
         # msg_2 = str(self.translator.translate(text=msg_2, dest=self.lang).text)
 
         await ctx.trigger_typing()
-        embed = discord.Embed(title= f"{msg_1}", color= 16777215)
+        embed = discord.Embed(title= f"{msg_1}", color= int("DCDCDC", 16))
         message = await ctx.send(embed= embed)
         await ctx.trigger_typing()
         await asyncio.sleep(3.5)
-        embed = discord.Embed (title= f"{msg_2}", color= 16777215)
+        embed = discord.Embed (title= f"{msg_2}", color= int("DCDCDC", 16))
         embed.set_image(url= result[random.randint(0, len(result)-1)][1])
         await message.delete()
         message = await ctx.send(embed= embed)
@@ -51,9 +51,9 @@ class Bartender(helper.Helper, commands.Cog):
     async def pagina(self, ctx, emoji: str, categoria: str):
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE categoria = '{categoria.lower()}';")
         if result != []:
-            embed = discord.Embed(description= f"```Haz tu pedido asi:\n$order <producto>```", color= 14579829)
+            embed = discord.Embed(description= f"```Haz tu pedido asi:\n$order <producto>```", color= int("8EC4FF", 16))
         else:
-            embed = discord.Embed(description= f"```No products have been added yet.```", color= 14579829)
+            embed = discord.Embed(description= f"```No products have been added yet.```", color= int("8EC4FF", 16))
         
         embed.set_author(name= f"{emoji} - {categoria}", icon_url= "https://images.unsplash.com/photo-1590486145851-aae8758c4211?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80")
         embed.set_footer(text= "Made with 💘 by Hec7orci7o.", icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
@@ -95,9 +95,9 @@ class Bartender(helper.Helper, commands.Cog):
         for cat in menu:
             menu_formated += cat[0] + ' - ' + cat[1] + '.\n'
 
-        embed = discord.Embed(description=f"```{menu_formated}```", color=9224068)
-        embed.set_author(name="Sections:", icon_url="https://static.vecteezy.com/system/resources/previews/000/639/289/original/vector-menu-icon-symbol-sign.jpg")
-        embed.set_footer(text="Made with 💘 by Hec7orci7o.", icon_url="https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
+        embed = discord.Embed(description= f"```{menu_formated}```", color= int("8EC4FF", 16))
+        embed.set_author(name= "Sections:", icon_url= "https://static.vecteezy.com/system/resources/previews/000/639/289/original/vector-menu-icon-symbol-sign.jpg")
+        embed.set_footer(text= "Made with 💘 by Hec7orci7o.", icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
         message = await ctx.send(embed= embed)
         for reaction in emojis:
             await message.add_reaction(reaction)
