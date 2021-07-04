@@ -87,9 +87,9 @@ class Bartender(helper.Helper, commands.Cog):
         menu = [(emojis[0],"sin alcohol"),(emojis[1],"con alcohol"),(emojis[2],"carnes"),(emojis[3],"pescados"),(emojis[4],"postres"),(emojis[5],"tapas"),(emojis[6],"chuches")]
         menu_formated = ''
         for cat in menu:
-            menu_formated += cat[0] + ' - ' + cat[1] + '.\n'
+            menu_formated += cat[0] + ' - ' + util.translate(cat[1]) + '.\n'
 
-        embed = discord.Embed(description= "```{}```".format(util.translate(menu_formated)), color= int("8EC4FF", 16))
+        embed = discord.Embed(description= "```{}```".format(menu_formated, color= int("8EC4FF", 16)))
         embed.set_author(name= util.translate("Sections:"), icon_url= "https://static.vecteezy.com/system/resources/previews/000/639/289/original/vector-menu-icon-symbol-sign.jpg")
         embed.set_footer(text= util.translate("Made with 💘 by Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
         message = await ctx.send(embed= embed)
