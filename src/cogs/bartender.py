@@ -40,7 +40,7 @@ class Bartender(helper.Helper, commands.Cog):
             await message.add_reaction(reaction)
 
     async def pagina(self, ctx, emoji: str, categoria: str):
-        result = await self.read(ctx, util.translate(f"SELECT nombre FROM productos WHERE categoria = '{categoria.lower()}';"))
+        result = await self.read(ctx, util.translate("SELECT nombre FROM productos WHERE categoria = '{}';".format(util.translate(categoria.lower(),'es'))))
         for name in result: name = util.translate(name)
         
         if result != []:
