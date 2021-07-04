@@ -59,7 +59,6 @@ class Bartender(helper.Helper, commands.Cog):
         embed.set_footer(text= "Made with 💘 by Hec7orci7o.", icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
         
         num_products = len(result)
-        print(num_products)
         if result != []:
             if num_products == 1:
                 p_page_1 = f"• {str(result[0])[2:-3]}\n"
