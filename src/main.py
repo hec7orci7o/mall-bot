@@ -4,6 +4,8 @@ import discord
 import libs.utils as util
 from discord.ext import commands
 
+dest = os.environ['LANG']
+
 class BotHelpCommand(commands.HelpCommand):
     def __init__(self):
         super().__init__()
@@ -24,7 +26,7 @@ class BotHelpCommand(commands.HelpCommand):
 class MallBot(commands.Bot):
     async def on_ready(self):
         embed = discord.Embed(
-            description= util.translate("If the public knew what they want,\nthen it would not be the public,\nit would be the artist."),
+            description= util.translate("If the public knew what they want,\nthen it would not be the public,\nit would be the artist.", dest),
             color= int("8CBF84", 16)
         )
         embed.set_thumbnail(
@@ -36,27 +38,27 @@ class MallBot(commands.Bot):
             icon_url= "https://images.unsplash.com/photo-1590486145851-aae8758c4211?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80"
         )
         embed.add_field(
-            name= util.translate("Stats:"),
-            value= "```c++\n{}```".format(util.translate("Running on {} servers\nStarted at {}".format(len(client.guilds), datetime.datetime.now().strftime("%X")))),
+            name= util.translate("Stats:", dest),
+            value= "```c++\n{}```".format(util.translate("Running on {} servers\nStarted at {}".format(len(client.guilds), datetime.datetime.now().strftime("%X")), dest)),
             inline= False
         )
         embed.set_footer(
-            text= util.translate("Made with 💘 by Hec7orci7o."),
+            text= util.translate("Made with 💘 by Hec7orci7o.", dest),
             icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4"
         )
         channel = client.get_channel(int(os.environ['CHANNEL']))
         await channel.send(embed=embed)
-        print(util.translate('Logged on as {0}!'.format(self.user)))
+        print(util.translate('Logged on as {0}!'.format(self.user), dest))
 
 client = MallBot(command_prefix='$', help_command=BotHelpCommand())
 
-# Cogs
-for filename in os.listdir('src/cogs'):
-    if filename.endswith('.py'):
-        try:
-            client.load_extension(f'cogs.{filename[:-3]}')
-            print(util.translate(f'cogs.{filename[:-3]} loaded successfully.'))
-        except:
-            print(util.translate(f'Error al cargar el cog {filename[:-3]}'))
+# # Cogs
+# for filename in os.listdir('src/cogs'):
+#     if filename.endswith('.py'):
+#         try:
+#             client.load_extension(f'cogs.{filename[:-3]}')
+#             print(util.translate(f'cogs.{filename[:-3]} loaded successfully.', dest))
+#         except:
+#             print(util.translate(f'Error al cargar el cog {filename[:-3]}', dest))
 
 client.run(os.environ['TOKEN'])
