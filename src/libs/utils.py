@@ -5,7 +5,9 @@ from googletrans import Translator
 
 def translate(txt: str):
     translator = Translator()
-    return str(translator.translate(text= txt, dest= str(os.environ['LANG'])))
+    traduccion = str(translator.translate(text= txt, dest= str(os.environ['LANG'])))
+    del translator
+    return traduccion
 
 def is_url(url: str):
     try:
