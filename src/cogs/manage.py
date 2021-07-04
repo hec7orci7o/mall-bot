@@ -135,7 +135,7 @@ class Manage(helper.Helper, commands.Cog):
                     else:                               text += str(row[0]) + ', '
                     iter += 1
 
-                embed = discord.Embed(description= "\n```{}c++\n{}```".format(f"IDs related to {row[1]}:", text), color= int("8EC4FF", 16))
+                embed = discord.Embed(description= "{}\n```c++\n{}```".format(f"IDs related to {row[1]}:", text), color= int("8EC4FF", 16))
                 embed.set_author(name= util.translate("SQL query"), icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
                 embed.set_footer(text= util.translate("Made with 💘 by Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
             await ctx.send(embed= embed)
