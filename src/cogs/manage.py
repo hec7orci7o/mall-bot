@@ -17,10 +17,8 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def insert(self, ctx, val: str, cat: str, url: str= ""):
-        translator = Translator()
-        val = str(translator.translate(text= val, dest= 'es').text)
-        cat = str(translator.translate(text= cat, dest= 'es').text)
-        del translator
+        util.translate(val, 'es')
+        util.translate(cat, 'es')
 
         result = str(await self.read(ctx, f"SELECT * FROM categorias WHERE nombre = '{cat.lower()}';"))[3:-4]
         if result != "":
@@ -56,10 +54,8 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def update_name(self, ctx, val_old: str, val_new: str):
-        translator = Translator()
-        val_old = str(translator.translate(text= val_old, dest= 'es').text)
-        val_new = str(translator.translate(text= val_new, dest= 'es').text)
-        del translator
+        util.translate(val_old, 'es')
+        util.translate(val_new, 'es')
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val_old.lower()}';")
 
         if result != []:
@@ -71,10 +67,8 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def update_category(self, ctx, val, cat_new: str):
-        translator = Translator()
-        val = str(translator.translate(text= val, dest= 'es').text)
-        cat_new = str(translator.translate(text= cat_new, dest= 'es').text)
-        del translator
+        util.translate(val, 'es')
+        util.translate(cat_new, 'es')
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
 
         if result != []:
@@ -86,9 +80,7 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def delete(self, ctx, val: int):
-        translator = Translator()
-        val = str(translator.translate(text= val, dest= 'es').text)
-        del translator
+        util.translate(val, 'es')
         result = await self.read(ctx, f"SELECT * FROM imagenes WHERE id = '{int(val)}';")
 
         if result != []:
@@ -100,9 +92,7 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def clear(self, ctx, val: str):
-        translator = Translator()
-        val = str(translator.translate(text= val, dest= 'es').text)
-        del translator
+        util.translate(val, 'es')
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
 
         if result == val.lower():
@@ -114,9 +104,7 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def select(self, ctx, val: str):
-        translator = Translator()
-        val = str(translator.translate(text= val, dest= 'es').text)
-        del translator
+        util.translate(val, 'es')
         # Comprueba que exista el prodcuto
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
 
