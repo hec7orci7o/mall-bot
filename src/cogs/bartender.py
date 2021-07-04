@@ -12,7 +12,7 @@ class Bartender(helper.Helper, commands.Cog):
 
     @commands.command(name = 'order')
     async def get_product(self, ctx, val):
-        util.translate(val, 'es')
+        val = util.translate(val, 'es')
         # Check producto registrado
         result = await self.read(ctx, f"SELECT * FROM productos WHERE nombre = '{val.lower()}';")
 

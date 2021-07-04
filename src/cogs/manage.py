@@ -17,8 +17,8 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def insert(self, ctx, val: str, cat: str, url: str= ""):
-        util.translate(val, 'es')
-        util.translate(cat, 'es')
+        val = util.translate(val, 'es')
+        cat = util.translate(cat, 'es')
 
         result = str(await self.read(ctx, f"SELECT * FROM categorias WHERE nombre = '{cat.lower()}';"))[3:-4]
         if result != "":
@@ -54,8 +54,8 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def update_name(self, ctx, val_old: str, val_new: str):
-        util.translate(val_old, 'es')
-        util.translate(val_new, 'es')
+        val_old = util.translate(val_old, 'es')
+        val_new = util.translate(val_new, 'es')
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val_old.lower()}';")
 
         if result != []:
@@ -67,8 +67,8 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def update_category(self, ctx, val, cat_new: str):
-        util.translate(val, 'es')
-        util.translate(cat_new, 'es')
+        val = util.translate(val, 'es')
+        cat_new = util.translate(cat_new, 'es')
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
 
         if result != []:
@@ -80,7 +80,7 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def delete(self, ctx, val: int):
-        util.translate(val, 'es')
+        val = util.translate(val, 'es')
         result = await self.read(ctx, f"SELECT * FROM imagenes WHERE id = '{int(val)}';")
 
         if result != []:
@@ -92,7 +92,7 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def clear(self, ctx, val: str):
-        util.translate(val, 'es')
+        val = util.translate(val, 'es')
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
 
         if result == val.lower():
@@ -104,7 +104,7 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def select(self, ctx, val: str):
-        util.translate(val, 'es')
+        val = util.translate(val, 'es')
         # Comprueba que exista el prodcuto
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
 
