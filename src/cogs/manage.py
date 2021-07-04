@@ -101,9 +101,9 @@ class Manage(helper.Helper, commands.Cog):
             # Comprueba el numero de imagenes que existe para un producto
             result = int(str(await self.read(ctx, f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"))[2:-3])
             if result == 0:
-                embed = discord.Embed(description= f"IDs related to {val.lower()}:\n```c++\nNo images has been added yet.```", color= int("8EC4FF", 16))
-                embed.set_author(name= "SQL query", icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
-                embed.set_footer(text= "Made with 💘 by Hec7orci7o.", icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
+                embed = discord.Embed(description= "{}\n```c++\n{}```".format(f"IDs related to {val.lower()}:", "No images has been added yet."), color= int("8EC4FF", 16))
+                embed.set_author(name= util.translate("SQL query"), icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
+                embed.set_footer(text= util.translate("Made with 💘 by Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
             else:
                 result = await self.read(ctx, f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';")
                 iter, max_items, text = 1, len(result), ""
@@ -112,9 +112,9 @@ class Manage(helper.Helper, commands.Cog):
                     else:                               text += str(row[0]) + ', '
                     iter += 1
 
-                embed = discord.Embed(description= f"IDs related to {row[1]}:\n```c++\n{text}```", color= int("8EC4FF", 16))
-                embed.set_author(name= "SQL query", icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
-                embed.set_footer(text= "Made with 💘 by Hec7orci7o.", icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
+                embed = discord.Embed(description= "\n```{}c++\n{}```".format(f"IDs related to {row[1]}:", text), color= int("8EC4FF", 16))
+                embed.set_author(name= util.translate("SQL query"), icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
+                embed.set_footer(text= util.translate("Made with 💘 by Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
             await ctx.send(embed= embed)
         else:
             await ctx.send(embed= util.fail("No right product selected."))
