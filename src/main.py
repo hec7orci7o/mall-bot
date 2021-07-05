@@ -24,7 +24,7 @@ class BotHelpCommand(commands.HelpCommand):
 class MallBot(commands.Bot):
     async def on_ready(self):
         embed = discord.Embed(
-            description= util.translate("Si el público supiera lo quiere,\nentonces no sería el público,\nsería el artista.",),
+            description= util.translate("Si el público supiera lo quiere,\nentonces no sería el público,\nsería el artista.", dest='en'),
             color= int("8CBF84", 16)
         )
         embed.set_thumbnail(
