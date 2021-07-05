@@ -77,7 +77,7 @@ class Bartender(helper.Helper, commands.Cog):
                 p_page_1, p_page_2, p_page_3 = f"• {str(result[0])}\n• {str(result[3])}", f"• {str(result[1])}\n", f"• {str(result[2])}\n"
             else:
                 print("6.5")
-                _s = int((len(result) / 3) + 1)
+                _s = len(result) // 3
                 p_page_1, p_page_2, p_page_3 = "", "", ""
                 for elem in result[:_s]:
                     print(f"1. {elem}")
