@@ -81,11 +81,11 @@ class Manage(helper.Helper, commands.Cog):
             # CHECK: Existe categoria con el nombre: {cat}?
             if result_c != []:
                 await self.write(ctx, f"UPDATE productos SET categoria = '{cat}' WHERE nombre = '{val}';")
-                await ctx.send(embed= util.success(f"Categoría cambiada: {val} -:- {cat}"))
+                await ctx.send(embed= util.success(f"Categoría de: {val}, cambiada a: {cat}."))
             else:
                 await ctx.send(embed= util.fail(f"Error, la categoria: {cat} no existe."))
         else:
-            await ctx.send(embed= util.fail("Error, el producto no existe"))
+            await ctx.send(embed= util.fail("Error, el producto no existe."))
        
     
     @is_bartender()
