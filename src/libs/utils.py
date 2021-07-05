@@ -9,6 +9,8 @@ def translate(txt: str, src:str = 'es', dest:str = 'es'):
         traduccion = str(translator.translate(text= txt, src=src, dest= dest).text)
         del translator
         return traduccion
+    else:
+        return txt
 
 def is_url(url: str):
     try:
