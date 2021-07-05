@@ -67,11 +67,11 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def update_category(self, ctx, val, cat_new: str):
-        val = util.translate(val, 'es')
+        val = util.translate(val, src='en')
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
 
         if result != []:
-            cat_new = util.translate(cat_new, 'es')
+            cat_new = util.translate(cat_new, src='en')
             result_c = await self.read(ctx, f"SELECT nombre FROM categorias WHERE nombre = '{cat_new.lower()}';")
             if result_c != []:
                 await self.write(ctx, f"UPDATE productos SET categoria = '{cat_new.lower()}' WHERE nombre = '{val.lower()}';")
@@ -85,7 +85,7 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def delete(self, ctx, val: int):
-        val = util.translate(val, 'es')
+        val = util.translate(val, src='en')
         result = await self.read(ctx, f"SELECT * FROM imagenes WHERE id = '{int(val)}';")
 
         if result != []:
