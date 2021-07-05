@@ -30,7 +30,8 @@ mall bot is a bar-based discord bot that serves a variety of bizarre products
 * Tabla de productos:
     
         CREATE TABLE productos (
-            nombre  varchar(45) NOT NULL,
+            nombre     varchar(45) NOT NULL,
+            categoria  varchar(25) NOT NULL,
             PRIMARY KEY (nombre)
         );
         
