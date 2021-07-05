@@ -92,7 +92,7 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def clear(self, ctx, val: str):
-        val = util.translate(val, 'es')
+        val = util.translate(val, src='en')
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
 
         if result == val.lower():
@@ -104,7 +104,7 @@ class Manage(helper.Helper, commands.Cog):
     @is_bartender()
     @commands.command()
     async def select(self, ctx, val: str):
-        val = util.translate(val, 'es')
+        val = util.translate(val, src='en')
         # Comprueba que exista el prodcuto
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';"))[3:-4]
 
@@ -112,9 +112,9 @@ class Manage(helper.Helper, commands.Cog):
             # Comprueba el numero de imagenes que existe para un producto
             result = int(str(await self.read(ctx, f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"))[2:-3])
             if result == 0:
-                embed = discord.Embed(description= "{}\n```c++\n{}```".format(f"ID relacionados con {val.lower()}:", "Todavía no se han añadido imagenes del producto."), color= int("8EC4FF", 16))
-                embed.set_author(name= util.translate("SQL query"), icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
-                embed.set_footer(text= util.translate("Hecho con 💘 por Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
+                embed = discord.Embed(description= "{}\n```c++\n{}```".format(util.translate(f"ID relacionados con {val.lower()}:", dest='en'), util.translate("Todavía no se han añadido imagenes del producto.", dest='en')), color= int("8EC4FF", 16))
+                embed.set_author(name= util.translate("SQL query", dest='en'), icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
+                embed.set_footer(text= util.translate("Hecho con 💘 por Hec7orci7o.", dest='en'), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
             else:
                 result = await self.read(ctx, f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';")
                 iter, max_items, text = 1, len(result), ""
@@ -123,9 +123,9 @@ class Manage(helper.Helper, commands.Cog):
                     else:                               text += str(row[0]) + ', '
                     iter += 1
 
-                embed = discord.Embed(description= "{}\n```c++\n{}```".format(f"ID relacionados con {row[1]}:", text), color= int("8EC4FF", 16))
-                embed.set_author(name= util.translate("SQL query"), icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
-                embed.set_footer(text= util.translate("Hecho con 💘 por Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
+                embed = discord.Embed(description= "{}\n```c++\n{}```".format(util.translate(f"ID relacionados con {row[1]}:", dest='en'), text), color= int("8EC4FF", 16))
+                embed.set_author(name= util.translate("SQL query", dest='en'), icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
+                embed.set_footer(text= util.translate("Hecho con 💘 por Hec7orci7o.", dest='en'), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
             await ctx.send(embed= embed)
         else:
             await ctx.send(embed= util.fail("Producto incorrecto seleccionado."))
