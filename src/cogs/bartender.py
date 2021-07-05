@@ -41,59 +41,40 @@ class Bartender(helper.Helper, commands.Cog):
             await message.add_reaction(reaction)
 
     async def pagina(self, ctx, emoji: str, categoria: str):
-        print("1")
         cat_q = util.translate(categoria, dest='en')
         result = await self.read(ctx, "SELECT nombre FROM productos WHERE categoria = '{}';".format(categoria))
         aux = list()
-        print("2")
         for iter in range(0, len(result)):
             aux.append( str(result[iter])[2:-3].capitalize() )
         result = aux
-        print("3")
         if result != []:
             embed = discord.Embed(description= "```{}:\n$order <{}>```".format(util.translate("Haz tu pedido asi", dest='en'),util.translate("producto", dest='en')), color= int("8EC4FF", 16))
         else:
             embed = discord.Embed(description= "```{}```".format(util.translate("Todavía no se han agregado productos.", dest='en')), color= int("8EC4FF", 16))
-        print("4")
         embed.set_author(name= f"{emoji} - {cat_q.capitalize()}", icon_url= "https://images.unsplash.com/photo-1590486145851-aae8758c4211?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80")
         embed.set_footer(text= util.translate("Hecho con 💘 por Hec7orci7o.", dest='en'), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
-        print("5")
         num_products = len(result)
-        print(result)
         if result != []:
             if num_products == 1:
-                print("6.1")
                 p_page_1 = f"• {str(result[0])}\n"
                 p_page_2, p_page_3 = "---", "---"
             elif num_products == 2:
-                print("6.2")
                 p_page_1, p_page_2 = f"• {str(result[0])}\n", f"• {str(result[1])}\n"
                 p_page_3 = "---"
             elif num_products == 3:
-                print("6.3")
                 p_page_1, p_page_2, p_page_3 = f"• {str(result[0])}\n", f"• {str(result[1])}\n", f"• {str(result[2])}\n"
             elif num_products == 4:
-                print("6.4")
                 p_page_1, p_page_2, p_page_3 = f"• {str(result[0])}\n• {str(result[3])}", f"• {str(result[1])}\n", f"• {str(result[2])}\n"
             else:
-                print("6.5")
                 _s = len(result) // 3
                 p_page_1, p_page_2, p_page_3 = "", "", ""
-                for elem in result[:_s]:
-                    print(f"1. {elem}")
-                    p_page_1 += f"• {str(elem)}\n"
-                for elem in result[_s:2*_s]:
-                    print(f"2. {elem}")
-                    p_page_2 += f"• {str(elem)}\n"
-                for elem in result[2*_s:]:
-                    print(f"3. {elem}")
-                    p_page_3 += f"• {str(elem)}\n"
+                for elem in result[:_s]:        p_page_3 += f"• {str(elem)}\n"
+                for elem in result[_s:2*_s]:    p_page_2 += f"• {str(elem)}\n"
+                for elem in result[2*_s:]:      p_page_1 += f"• {str(elem)}\n"
 
-            print("7")
             embed.add_field(name=util.translate("Página 1.", dest= 'en'),value=f"{p_page_1}",inline=True)
             embed.add_field(name=util.translate("Página 2.", dest= 'en'),value=f"{p_page_2}",inline=True)
             embed.add_field(name=util.translate("Página 3.", dest= 'en'),value=f"{p_page_3}",inline=True)
-        print("8")
         await ctx.send(embed = embed)
 
 
@@ -119,7 +100,6 @@ class Bartender(helper.Helper, commands.Cog):
         if str(reaction.emoji) in emojis:
             indice = emojis.index(str(reaction.emoji))
             await message.delete()
-            print(str(menu[indice][1]))
             await self.pagina(ctx, emojis[indice], str(menu[indice][1]))
             
     
