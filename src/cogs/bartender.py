@@ -59,29 +59,35 @@ class Bartender(helper.Helper, commands.Cog):
         embed.set_footer(text= util.translate("Hecho con 💘 por Hec7orci7o.", dest='en'), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
         print("5")
         num_products = len(result)
+        print(result)
         if result != []:
             if num_products == 1:
+                print("6.1")
                 p_page_1 = f"• {str(result[0])}\n"
                 p_page_2, p_page_3 = "---", "---"
             elif num_products == 2:
+                print("6.2")
                 p_page_1, p_page_2 = f"• {str(result[0])}\n", f"• {str(result[1])}\n"
                 p_page_3 = "---"
             elif num_products == 3:
+                print("6.3")
                 p_page_1, p_page_2, p_page_3 = f"• {str(result[0])}\n", f"• {str(result[1])}\n", f"• {str(result[2])}\n"
             elif num_products == 4:
+                print("6.4")
                 p_page_1, p_page_2, p_page_3 = f"• {str(result[0])}\n• {str(result[3])}", f"• {str(result[1])}\n", f"• {str(result[2])}\n"
             else:
+                print("6.5")
                 _s = int((len(result) / 3) + 1)
                 p_page_1, p_page_2, p_page_3 = "", "", ""
                 for elem in result[:_s]:     p_page_1 += f"• {str(elem)}\n"
                 for elem in result[_s:2*_s]: p_page_2 += f"• {str(elem)}\n"
                 for elem in result[2*_s:]:   p_page_3 += f"• {str(elem)}\n"
 
-            print("6")
+            print("7")
             embed.add_field(name=util.translate("Página 1.", dest= 'en'),value=f"{p_page_1}",inline=True)
             embed.add_field(name=util.translate("Página 2.", dest= 'en'),value=f"{p_page_2}",inline=True)
             embed.add_field(name=util.translate("Página 3.", dest= 'en'),value=f"{p_page_3}",inline=True)
-        print("7")
+        print("8")
         await ctx.send(embed = embed)
 
 
