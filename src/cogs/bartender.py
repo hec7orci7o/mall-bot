@@ -43,8 +43,10 @@ class Bartender(helper.Helper, commands.Cog):
     async def pagina(self, ctx, emoji: str, categoria: str):
         cat_q = util.translate(categoria, dest='en')
         result = await self.read(ctx, "SELECT nombre FROM productos WHERE categoria = '{}';".format(categoria))
-        for iter in range(0, len(result)): 
-            result[iter] = result[iter].capitalize()
+        aux = list()
+        for iter in range(0, len(result)):
+            print(result[iter])
+            aux.append( str(result[iter]).capitalize() )
         
         if result != []:
             embed = discord.Embed(description= "```{}:\n$order <{}>```".format(util.translate("Haz tu pedido asi", dest='en'),util.translate("producto", dest='en')), color= int("8EC4FF", 16))
