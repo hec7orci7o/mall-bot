@@ -68,14 +68,19 @@ class Manage(helper.Helper, commands.Cog):
     @commands.command()
     async def update_category(self, ctx, val, cat_new: str):
         val = util.translate(val, 'es')
-        cat_new = util.translate(cat_new, 'es')
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val.lower()}';")
 
         if result != []:
-            await self.write(ctx, f"UPDATE productos SET categoria = '{cat_new.lower()}' WHERE nombre = '{val.lower()}';")
-            await ctx.send(embed= util.success(f"Categoría cambiada: {val.lower()} -> {cat_new.lower()}"))
+            cat_new = util.translate(cat_new, 'es')
+            result_c = await self.read(ctx, f"SELECT nombre FROM categorias WHERE nombre = '{cat_new.lower()}';")
+            if result_c != []:
+                await self.write(ctx, f"UPDATE productos SET categoria = '{cat_new.lower()}' WHERE nombre = '{val.lower()}';")
+                await ctx.send(embed= util.success(f"Categoría cambiada: {val.lower()} -> {cat_new.lower()}"))
+            else:
+                await ctx.send(embed= util.fail(f"Error, la categoria: {cat_new} no existe."))
         else:
             await ctx.send(embed= util.fail("Error, el producto no existe"))
+       
     
     @is_bartender()
     @commands.command()
