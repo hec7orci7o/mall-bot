@@ -44,7 +44,7 @@ class Bartender(helper.Helper, commands.Cog):
         cat_q = util.translate(categoria, dest='en')
         result = await self.read(ctx, "SELECT nombre FROM productos WHERE categoria = '{}';".format(categoria))
         for iter in range(0, len(result)): 
-            result[iter] = util.translate(result[iter], src='es', dest='en').capitalize()
+            result[iter] = result[iter].capitalize()
         
         if result != []:
             embed = discord.Embed(description= "```{}:\n$order <{}>```".format(util.translate("Haz tu pedido asi", dest='en'),util.translate("producto", dest='en')), color= int("8EC4FF", 16))
