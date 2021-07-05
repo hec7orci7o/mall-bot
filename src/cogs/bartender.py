@@ -45,7 +45,6 @@ class Bartender(helper.Helper, commands.Cog):
         result = await self.read(ctx, "SELECT nombre FROM productos WHERE categoria = '{}';".format(categoria))
         aux = list()
         for iter in range(0, len(result)):
-            print(result[iter])
             aux.append( str(result[iter])[2:-3].capitalize() )
         result = aux
         
