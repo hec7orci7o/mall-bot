@@ -39,7 +39,7 @@ class Bartender(helper.Helper, commands.Cog):
         await asyncio.sleep(3.5)
         
         embed = discord.Embed (
-            title= "{} {}.".format(util.translate(f"Aquí está su"), val.lower()), 
+            title= "{} {}.".format(util.translate(f"Aquí está su", dest='en'), val.lower()), 
             color= int("DCDCDC", 16)
         )
         embed.set_image(url= result[random.randint(0, len(result)-1)][1])

@@ -37,7 +37,7 @@ class MallBot(commands.Bot):
         )
         embed.add_field(
             name= util.translate("Stats:"),
-            value= "```c++\n{}```".format(util.translate("Corriendo en {} servidores\Comenó a las {}".format(len(client.guilds), datetime.datetime.now().strftime("%X")), dest='en')),
+            value= "```c++\n{}```".format(util.translate("Corriendo en {} servidores\nComenó a las {}".format(len(client.guilds), datetime.datetime.now().strftime("%X")), dest='en')),
             inline= False
         )
         embed.set_footer(
