@@ -46,7 +46,7 @@ class Bartender(helper.Helper, commands.Cog):
         aux = list()
         for iter in range(0, len(result)):
             print(result[iter])
-            aux.append( str(result[iter]).capitalize() )
+            aux.append( str(result[iter])[2:-3].capitalize() )
         
         if result != []:
             embed = discord.Embed(description= "```{}:\n$order <{}>```".format(util.translate("Haz tu pedido asi", dest='en'),util.translate("producto", dest='en')), color= int("8EC4FF", 16))
