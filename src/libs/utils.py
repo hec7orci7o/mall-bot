@@ -5,7 +5,7 @@ from googletrans import Translator
 
 def translate(txt: str, dest:str = 'en'):
     translator = Translator()
-    traduccion = str(translator.translate(text= txt, dest= dest).text)
+    traduccion = str(translator.translate(text= txt, src='es', dest= dest).text)
     del translator
     return traduccion
 
