@@ -12,15 +12,15 @@ class Bartender(helper.Helper, commands.Cog):
 
     @commands.command(name = 'order')
     async def get_product(self, ctx, val):
-        val = util.translate(val, 'es')
+        val_q = util.translate(val, src='en', dest='es')
         # Check producto registrado
-        result = await self.read(ctx, f"SELECT * FROM productos WHERE nombre = '{val.lower()}';")
+        result = await self.read(ctx, f"SELECT * FROM productos WHERE nombre = '{val_q.lower()}';")
 
         if result == []:
-            await ctx.send(embed= util.fail(f"Lo sentimos, no hay productos registrados con el nombre: {val.lower()}"))
+            await ctx.send(embed= util.fail(f"Lo siento, no se han encontrado productos registrados con el nombre: {val.lower()}"))
         else:
             # Check disponibilidad del producto registrado
-            result = await self.read(ctx, f"SELECT nombre, url FROM imagenes WHERE nombre = '{val.lower()}';")
+            result = await self.read(ctx, f"SELECT nombre, url FROM imagenes WHERE nombre = '{val_q.lower()}';")
 
             if result == []:
                 await ctx.send(embed= util.fail(f"Lo siento, no hay suficientes {val.lower()}"))
@@ -29,11 +29,11 @@ class Bartender(helper.Helper, commands.Cog):
     
     async def get_item(self, ctx, val, result):
         await ctx.trigger_typing()
-        embed = discord.Embed(title= "{}".format(util.translate("Por favor, Espere mientras preparo su pedido...")), color= int("DCDCDC", 16))
+        embed = discord.Embed(title= "{}".format(util.translate("Por favor, Espere mientras preparo su pedido...", src='es', dest='en')), color= int("DCDCDC", 16))
         message = await ctx.send(embed= embed)
         await ctx.trigger_typing()
         await asyncio.sleep(3.5)
-        embed = discord.Embed (title= "{}".format(util.translate(f"Aquí está su {val.lower()}.")), color= int("DCDCDC", 16))
+        embed = discord.Embed (title= "{} {}.".format(util.translate(f"Aquí está su"), val.lower()), color= int("DCDCDC", 16))
         embed.set_image(url= result[random.randint(0, len(result)-1)][1])
         await message.delete()
         message = await ctx.send(embed= embed)
@@ -41,17 +41,18 @@ class Bartender(helper.Helper, commands.Cog):
             await message.add_reaction(reaction)
 
     async def pagina(self, ctx, emoji: str, categoria: str):
-        result = await self.read(ctx, "SELECT nombre FROM productos WHERE categoria = '{}';".format(util.translate(categoria.lower(),'es')))
+        cat_q = util.translate(categoria, src='en', dest='es')
+        result = await self.read(ctx, "SELECT nombre FROM productos WHERE categoria = '{}';".format(cat_q))
         for iter in range(0, len(result)): 
-            result[iter] = util.translate(result[iter])
+            result[iter] = util.translate(result[iter], src='es', dest='en')
         
         if result != []:
-            embed = discord.Embed(description= "```{}:\n$order <{}>```".format(util.translate("Haz tu pedido asi"),util.translate("producto")), color= int("8EC4FF", 16))
+            embed = discord.Embed(description= "```{}:\n$order <{}>```".format(util.translate("Haz tu pedido asi", dest='en'),util.translate("producto", dest='en')), color= int("8EC4FF", 16))
         else:
-            embed = discord.Embed(description= "```{}```".format(util.translate("No products have been added yet.")), color= int("8EC4FF", 16))
+            embed = discord.Embed(description= "```{}```".format(util.translate("Todavía no se han agregado productos.", dest='en')), color= int("8EC4FF", 16))
         
-        embed.set_author(name= "{} - {}".format(emoji, util.translate(categoria)), icon_url= "https://images.unsplash.com/photo-1590486145851-aae8758c4211?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80")
-        embed.set_footer(text= util.translate("Made with 💘 by Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
+        embed.set_author(name= f"{emoji} - {cat_q}", icon_url= "https://images.unsplash.com/photo-1590486145851-aae8758c4211?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1868&q=80")
+        embed.set_footer(text= util.translate("Hecho con 💘 por Hec7orci7o.", dest='en'), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
         
         num_products = len(result)
         if result != []:
@@ -73,9 +74,9 @@ class Bartender(helper.Helper, commands.Cog):
                 for elem in result[2*_s:]:   p_page_3 += f"• {str(elem)}\n"
 
 
-            embed.add_field(name=util.translate("Page 1."),value=f"{p_page_1}",inline=True)
-            embed.add_field(name=util.translate("Page 2."),value=f"{p_page_2}",inline=True)
-            embed.add_field(name=util.translate("Page 3."),value=f"{p_page_3}",inline=True)
+            embed.add_field(name=util.translate("Página 1.", dest= 'en'),value=f"{p_page_1}",inline=True)
+            embed.add_field(name=util.translate("Página 2.", dest= 'en'),value=f"{p_page_2}",inline=True)
+            embed.add_field(name=util.translate("Página 3.", dest= 'en'),value=f"{p_page_3}",inline=True)
             return embed
         else:
             return embed

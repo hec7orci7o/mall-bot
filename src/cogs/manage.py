@@ -29,13 +29,13 @@ class Manage(helper.Helper, commands.Cog):
                 result = int(str(await self.read(ctx, f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"))[2:-3])
                 if result < 5 and util.is_url(url):
                     await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
-                    await ctx.send(embed= util.success(f"New image for: {val.lower()}\n{5-(result+1)}/5 spaces available"))
+                    await ctx.send(embed= util.success(f"Nueva imagen para: {val.lower()}\n{5-(result+1)}/5 espacios disponibles"))
                 elif result >= 5:
-                    await ctx.send(embed= util.fail("Error, to much imgs for the same product.\n5/5 imgs"))
+                    await ctx.send(embed= util.fail("Error, demasiadas imágenes para el mismo producto.\n5/5 imgs"))
                 elif url == "":
-                    await ctx.send(embed= util.fail("Error, product already exist."))
+                    await ctx.send(embed= util.fail("Error, el producto ya existe."))
                 else:
-                    await ctx.send(embed= util.fail("Error, not a well formed url."))
+                    await ctx.send(embed= util.fail("Error, no es una URL correcta."))
 
             # Nuevo producto
             else:
@@ -47,9 +47,9 @@ class Manage(helper.Helper, commands.Cog):
                     await self.write(ctx, f"INSERT INTO imagenes (nombre, url) VALUES ('{val.lower()}', '{url}');")
                     await ctx.send(embed= util.success(f"New product & image for: {val.lower()}"))
                 else:
-                    await ctx.send(embed= util.fail("Error, not a well formed url."))
+                    await ctx.send(embed= util.fail("Error, no es una URL correcta."))
         else:
-            await ctx.send(embed= util.fail("Error, category does not exist"))
+            await ctx.send(embed= util.fail("Error, la categoria no existe"))
 
     @is_bartender()
     @commands.command()
@@ -60,9 +60,9 @@ class Manage(helper.Helper, commands.Cog):
 
         if result != []:
             await self.write(ctx, f"UPDATE productos SET nombre = '{val_new.lower()}' WHERE nombre = '{val_old.lower()}';")
-            await ctx.send(embed= util.success(f"Name changed to: {val_new.capitalize()}"))
+            await ctx.send(embed= util.success(f"Nombre cambiado a: {val_new.capitalize()}"))
         else:
-            await ctx.send(embed= util.fail("Error product does not exist."))
+            await ctx.send(embed= util.fail("Error, el producto no existe."))
 
     @is_bartender()
     @commands.command()
@@ -73,9 +73,9 @@ class Manage(helper.Helper, commands.Cog):
 
         if result != []:
             await self.write(ctx, f"UPDATE productos SET categoria = '{cat_new.lower()}' WHERE nombre = '{val.lower()}';")
-            await ctx.send(embed= util.success(f"category for {val.lower()} changed to: {cat_new.capitalize()}"))
+            await ctx.send(embed= util.success(f"Categoría cambiada: {val.lower()} -> {cat_new.lower()}"))
         else:
-            await ctx.send(embed= util.fail("Error product does not exist."))
+            await ctx.send(embed= util.fail("Error, el producto no existe"))
     
     @is_bartender()
     @commands.command()
@@ -85,9 +85,9 @@ class Manage(helper.Helper, commands.Cog):
 
         if result != []:
             await self.write(ctx, f"DELETE FROM imagenes WHERE id = {int(val)};")
-            await ctx.send(embed= util.success(f"Product with id = {int(val)} deleted successfuly."))
+            await ctx.send(embed= util.success(f"Producto con id: {int(val)} eliminado con exito."))
         else:
-            await ctx.send(embed= util.fail(f"Error while deleting the product with id: {int(val)}."))
+            await ctx.send(embed= util.fail(f"Error al eliminar la imagen con id: {int(val)}."))
 
     @is_bartender()
     @commands.command()
@@ -97,9 +97,9 @@ class Manage(helper.Helper, commands.Cog):
 
         if result == val.lower():
             await self.write(ctx, f"DELETE FROM productos WHERE nombre = '{val.lower()}';")
-            await ctx.send(embed= util.success(f"Product deleted: {val.capitalize()}"))
+            await ctx.send(embed= util.success(f"Producto eliminado: {val.capitalize()}"))
         else:
-            await ctx.send(embed= util.fail("Error while deleting the product."))
+            await ctx.send(embed= util.fail("Error al eliminar el producto."))
 
     @is_bartender()
     @commands.command()
@@ -112,9 +112,9 @@ class Manage(helper.Helper, commands.Cog):
             # Comprueba el numero de imagenes que existe para un producto
             result = int(str(await self.read(ctx, f"SELECT count(*) FROM imagenes WHERE nombre = '{val.lower()}';"))[2:-3])
             if result == 0:
-                embed = discord.Embed(description= "{}\n```c++\n{}```".format(f"IDs related to {val.lower()}:", "No images has been added yet."), color= int("8EC4FF", 16))
+                embed = discord.Embed(description= "{}\n```c++\n{}```".format(f"ID relacionados con {val.lower()}:", "Todavía no se han añadido imagenes del producto."), color= int("8EC4FF", 16))
                 embed.set_author(name= util.translate("SQL query"), icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
-                embed.set_footer(text= util.translate("Made with 💘 by Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
+                embed.set_footer(text= util.translate("Hecho con 💘 por Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
             else:
                 result = await self.read(ctx, f"SELECT id, nombre FROM imagenes WHERE nombre = '{val.lower()}';")
                 iter, max_items, text = 1, len(result), ""
@@ -123,12 +123,12 @@ class Manage(helper.Helper, commands.Cog):
                     else:                               text += str(row[0]) + ', '
                     iter += 1
 
-                embed = discord.Embed(description= "{}\n```c++\n{}```".format(f"IDs related to {row[1]}:", text), color= int("8EC4FF", 16))
+                embed = discord.Embed(description= "{}\n```c++\n{}```".format(f"ID relacionados con {row[1]}:", text), color= int("8EC4FF", 16))
                 embed.set_author(name= util.translate("SQL query"), icon_url="https://image.flaticon.com/icons/png/512/2306/2306022.png")
-                embed.set_footer(text= util.translate("Made with 💘 by Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
+                embed.set_footer(text= util.translate("Hecho con 💘 por Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
             await ctx.send(embed= embed)
         else:
-            await ctx.send(embed= util.fail("No right product selected."))
+            await ctx.send(embed= util.fail("Producto incorrecto seleccionado."))
 
 def setup(bot):
     bot.add_cog(Manage(bot))
