@@ -4,10 +4,11 @@ from urllib.parse import urlparse
 from googletrans import Translator
 
 def translate(txt: str, src:str = 'es', dest:str = 'es'):
-    translator = Translator()
-    traduccion = str(translator.translate(text= txt, src=src, dest= dest).text)
-    del translator
-    return traduccion
+    if False:
+        translator = Translator()
+        traduccion = str(translator.translate(text= txt, src=src, dest= dest).text)
+        del translator
+        return traduccion
 
 def is_url(url: str):
     try:
