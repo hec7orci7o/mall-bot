@@ -79,9 +79,15 @@ class Bartender(helper.Helper, commands.Cog):
                 print("6.5")
                 _s = int((len(result) / 3) + 1)
                 p_page_1, p_page_2, p_page_3 = "", "", ""
-                for elem in result[:_s]:     p_page_1 += f"• {str(elem)}\n"
-                for elem in result[_s:2*_s]: p_page_2 += f"• {str(elem)}\n"
-                for elem in result[2*_s:]:   p_page_3 += f"• {str(elem)}\n"
+                for elem in result[:_s]:
+                    print(f"1. {elem}")
+                    p_page_1 += f"• {str(elem)}\n"
+                for elem in result[_s:2*_s]:
+                    print(f"2. {elem}")
+                    p_page_2 += f"• {str(elem)}\n"
+                for elem in result[2*_s:]:
+                    print(f"3. {elem}")
+                    p_page_3 += f"• {str(elem)}\n"
 
             print("7")
             embed.add_field(name=util.translate("Página 1.", dest= 'en'),value=f"{p_page_1}",inline=True)
