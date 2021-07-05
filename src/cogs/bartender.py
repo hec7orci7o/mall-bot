@@ -41,8 +41,7 @@ class Bartender(helper.Helper, commands.Cog):
             await message.add_reaction(reaction)
 
     async def pagina(self, ctx, emoji: str, categoria: str):
-        cat_q = util.translate(categoria, src='en', dest='es')
-        result = await self.read(ctx, "SELECT nombre FROM productos WHERE categoria = '{}';".format(cat_q))
+        result = await self.read(ctx, "SELECT nombre FROM productos WHERE categoria = '{}';".format(categoria))
         for iter in range(0, len(result)): 
             result[iter] = util.translate(result[iter], src='es', dest='en')
         
@@ -88,11 +87,11 @@ class Bartender(helper.Helper, commands.Cog):
         menu = [(emojis[0],"sin alcohol"),(emojis[1],"con alcohol"),(emojis[2],"carnes"),(emojis[3],"pescados"),(emojis[4],"postres"),(emojis[5],"tapas"),(emojis[6],"chuches")]
         menu_formated = ''
         for cat in menu:
-            menu_formated += cat[0] + ' - ' + util.translate(cat[1]) + '.\n'
+            menu_formated += cat[0] + ' - ' + util.translate(cat[1], dest='en') + '.\n'
 
         embed = discord.Embed(description= "```{}```".format(menu_formated, color= int("8EC4FF", 16)))
-        embed.set_author(name= util.translate("Sections:"), icon_url= "https://static.vecteezy.com/system/resources/previews/000/639/289/original/vector-menu-icon-symbol-sign.jpg")
-        embed.set_footer(text= util.translate("Made with 💘 by Hec7orci7o."), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
+        embed.set_author(name= util.translate("Secciones:", dest='en'), icon_url= "https://static.vecteezy.com/system/resources/previews/000/639/289/original/vector-menu-icon-symbol-sign.jpg")
+        embed.set_footer(text= util.translate("Hecho con 💘 por Hec7orci7o.", dest='en'), icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4")
         message = await ctx.send(embed= embed)
         for reaction in emojis:
             await message.add_reaction(reaction)
@@ -104,7 +103,7 @@ class Bartender(helper.Helper, commands.Cog):
         if str(reaction.emoji) in emojis:
             indice = emojis.index(str(reaction.emoji))
             await message.delete()
-            await ctx.send(embed = await self.pagina(ctx, emojis[indice], util.translate(str(menu[indice][1])).capitalize()))
+            await ctx.send(embed = await self.pagina(ctx, emojis[indice], str(menu[indice][1])))
     
 def setup(bot):
     bot.add_cog(Bartender(bot))
