@@ -24,7 +24,7 @@ class BotHelpCommand(commands.HelpCommand):
 class MallBot(commands.Bot):
     async def on_ready(self):
         embed = discord.Embed(
-            description= util.translate("If the public knew what they want,\nthen it would not be the public,\nit would be the artist."),
+            description= util.translate("Si el público supiera lo quiere,\nentonces no sería el público,\nsería el artista.",),
             color= int("8CBF84", 16)
         )
         embed.set_thumbnail(
@@ -37,16 +37,17 @@ class MallBot(commands.Bot):
         )
         embed.add_field(
             name= util.translate("Stats:"),
-            value= "```c++\n{}```".format(util.translate("Running on {} servers\nStarted at {}".format(len(client.guilds), datetime.datetime.now().strftime("%X")))),
+            value= "```c++\n{}```".format(util.translate("Corriendo en {} servidores\Comenó a las {}".format(len(client.guilds), datetime.datetime.now().strftime("%X")), dest='en')),
             inline= False
         )
         embed.set_footer(
-            text= util.translate("Made with 💘 by Hec7orci7o."),
+            text= util.translate("Hecho con 💘 por Hec7orci7o.", dest='en'),
             icon_url= "https://avatars.githubusercontent.com/u/56583980?s=60&v=4"
         )
+        
         channel = client.get_channel(int(os.environ['CHANNEL']))
         await channel.send(embed=embed)
-        print(util.translate('Logged on as {0}!'.format(self.user)))
+        print(util.translate('Conectado como {0}!'.format(self.user)))
 
 client = MallBot(command_prefix='$', help_command=BotHelpCommand())
 
@@ -55,7 +56,7 @@ for filename in os.listdir('src/cogs'):
     if filename.endswith('.py'):
         try:
             client.load_extension(f'cogs.{filename[:-3]}')
-            print(util.translate(f'cogs.{filename[:-3]} loaded successfully.'))
+            print(util.translate(f'cogs.{filename[:-3]} cargado con exito.'))
         except:
             print(util.translate(f'Error al cargar el cog {filename[:-3]}'))
 
