@@ -1,7 +1,6 @@
 import random
 import asyncio
 import discord
-from discord.ext.commands.core import check
 from discord_components.component import ButtonStyle
 import libs.utils as util
 import libs.helper as helper
