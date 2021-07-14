@@ -4,11 +4,14 @@ import discord
 import libs.utils as util
 import libs.helper as helper
 from discord.ext import commands
+from discord_components.component import ButtonStyle
+from discord_components import DiscordComponents, Button, Select, SelectOption, ActionRow
 import libs.utils as util
 
 class Bartender(helper.Helper, commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        DiscordComponents(self.bot)
 
     @commands.command(name = 'order')
     async def get_product(self, ctx, val):
@@ -45,10 +48,22 @@ class Bartender(helper.Helper, commands.Cog):
         embed.set_image(url= result[random.randint(0, len(result)-1)][1])
         
         await message.delete()
-        message = await ctx.send(embed= embed)
-        
-        for reaction in ['👍', '👎']:
-            await message.add_reaction(reaction)
+        message = await ctx.send(embed= embed, components = [ActionRow(Button(custom_id='0', emoji = "👍"),Button(custom_id='1', emoji = "👎"),Button(custom_id='2', style=ButtonStyle.blue, label = "Propina"))])
+
+        def check(message):
+            return ctx.author == message.author
+
+        opposite = True
+        for iter in range(0,3):
+            button = await self.bot.wait_for('button_click', timeout=60.0, check=check)
+            if int(button.custom_id) == 0 and opposite:
+                await button.respond(content = f"Me alegra que le haya gustado.")
+                opposite = False
+            elif int(button.custom_id) == 1 and opposite:
+                await button.respond(content = f"Lamento que no haya sido de su agrado, espero que la próxima vez este a la altura.")
+                opposite = False
+            elif int(button.custom_id) == 2:
+                await button.respond(content = f"Muchas gracias hasta la proxima!")
 
     async def pagina(self, ctx, emoji: str, categoria: str):
         # SAVE: Lista con los productos de  {categoria}
@@ -96,7 +111,18 @@ class Bartender(helper.Helper, commands.Cog):
             embed.add_field(name= util.translate("Página 1.", dest= 'en'), value= f"{p_page_1}", inline= True)
             embed.add_field(name= util.translate("Página 2.", dest= 'en'), value= f"{p_page_2}", inline= True)
             embed.add_field(name= util.translate("Página 3.", dest= 'en'), value= f"{p_page_3}", inline= True)
-        await ctx.send(embed = embed)
+        
+        options = []
+        for producto in result:
+            options.append(SelectOption(label=producto, value=producto))
+        await ctx.send(embed = embed, components = [Select(placeholder="¿Qué desea?", options=options)])
+        
+        def check(message):
+            return ctx.author == message.author
+
+        interaction = await self.bot.wait_for("select_option", timeout=60.0, check=check)
+        await interaction.respond(content = f"Ahora mismo se lo preparo.")
+        await self.get_product(ctx, interaction.component[0].label)
 
     @commands.command()
     async def carta(self, ctx):
