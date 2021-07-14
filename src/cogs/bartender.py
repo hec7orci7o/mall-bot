@@ -1,10 +1,11 @@
 import random
 import asyncio
 import discord
+from discord.ext.commands.core import check
+from discord_components.component import ButtonStyle
 import libs.utils as util
 import libs.helper as helper
 from discord.ext import commands
-from discord_components.component import ButtonStyle
 from discord_components import DiscordComponents, Button, Select, SelectOption, ActionRow
 import libs.utils as util
 
@@ -48,6 +49,7 @@ class Bartender(helper.Helper, commands.Cog):
         embed.set_image(url= result[random.randint(0, len(result)-1)][1])
         
         await message.delete()
+        
         message = await ctx.send(embed= embed, components = [ActionRow(Button(custom_id='0', emoji = "👍"),Button(custom_id='1', emoji = "👎"),Button(custom_id='2', style=ButtonStyle.blue, label = "Propina"))])
 
         def check(message):
@@ -111,7 +113,7 @@ class Bartender(helper.Helper, commands.Cog):
             embed.add_field(name= util.translate("Página 1.", dest= 'en'), value= f"{p_page_1}", inline= True)
             embed.add_field(name= util.translate("Página 2.", dest= 'en'), value= f"{p_page_2}", inline= True)
             embed.add_field(name= util.translate("Página 3.", dest= 'en'), value= f"{p_page_3}", inline= True)
-        
+
         options = []
         for producto in result:
             options.append(SelectOption(label=producto, value=producto))
@@ -123,6 +125,7 @@ class Bartender(helper.Helper, commands.Cog):
         interaction = await self.bot.wait_for("select_option", timeout=60.0, check=check)
         await interaction.respond(content = f"Ahora mismo se lo preparo.")
         await self.get_product(ctx, interaction.component[0].label)
+        
 
     @commands.command()
     async def carta(self, ctx):
