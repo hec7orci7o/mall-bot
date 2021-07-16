@@ -64,12 +64,12 @@ class MallBot(commands.Bot):
         await channel.send(embed=embed)
         print(util.translate('Conectado como {0}!'.format(self.user)))
         print("Event loop 'change presence()' started.")
-        self.myLoop.start()
+        self.presence.start()
 
         @tasks.loop(seconds = 3600) # repeat after every 1 hour
-    async def myLoop(self):
-        game = discord.Activity(type=discord.ActivityType.watching, name="{} {} | $help".format(len(client.guilds), util.translate("mesas")))
-        await client.change_presence(status=discord.Status.idle, activity=game)
+        async def presence(self):
+            game = discord.Activity(type=discord.ActivityType.watching, name="{} {} | $help".format(len(client.guilds), util.translate("mesas")))
+            await client.change_presence(status=discord.Status.idle, activity=game)
 
 client = MallBot(command_prefix='$', help_command=BotHelpCommand())
 
