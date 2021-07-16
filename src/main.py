@@ -23,7 +23,16 @@ class BotHelpCommand(commands.HelpCommand):
         await self.get_destination().send(embed= embed)
 
     async def send_cog_help(self, cog):
-        await self.get_destination().send(f'{cog.qualified_name}: {[command.name for command in cog.get_command()]}')
+        embed = discord.Embed(
+            title= "Cog Menu",
+            colour= int("3861FB",16)
+        )
+        lista = [command.name for command in cog.get_commands()]
+        value = ''
+        for cmd in lista:
+            value += (f" + {cmd}\n")
+        embed.add_field(name= str(cog.qualified_name).capitalize(), value= value, inline='false')
+        await self.get_destination().send(embed= embed)
     
     async def send_command_help(self, command):
         embed = discord.Embed(
