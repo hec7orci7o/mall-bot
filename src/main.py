@@ -2,7 +2,7 @@ import os
 import datetime
 import discord
 import libs.utils as util
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 class BotHelpCommand(commands.HelpCommand):
     def __init__(self):
@@ -63,6 +63,13 @@ class MallBot(commands.Bot):
         channel = client.get_channel(int(os.environ['CHANNEL']))
         await channel.send(embed=embed)
         print(util.translate('Conectado como {0}!'.format(self.user)))
+        print("Event loop 'change presence()' started.")
+        self.myLoop.start()
+
+        @tasks.loop(seconds = 3600) # repeat after every 1 hour
+    async def myLoop(self):
+        game = discord.Activity(type=discord.ActivityType.watching, name="{} {} | $help".format(len(client.guilds), util.translate("mesas")))
+        await client.change_presence(status=discord.Status.idle, activity=game)
 
 client = MallBot(command_prefix='$', help_command=BotHelpCommand())
 
