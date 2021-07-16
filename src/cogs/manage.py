@@ -15,7 +15,7 @@ class Manage(helper.Helper, commands.Cog):
         self.bot = bot
 
     @is_bartender()
-    @commands.command()
+    @commands.command(help="Usage: `$insert <product>* <category>* <img_url>`\n`$insert solomillo carne https://www.google.es/...`")
     async def insert(self, ctx, val: str, cat: str, url: str= ""):
         cat = util.translate(cat, src='en').lower()
         result = str(await self.read(ctx, f"SELECT * FROM categorias WHERE nombre = '{cat}';"))[3:-4]
@@ -53,7 +53,7 @@ class Manage(helper.Helper, commands.Cog):
             await ctx.send(embed= util.fail("Error, la categoria no existe"))
 
     @is_bartender()
-    @commands.command()
+    @commands.command(help="Usage: `$update_name <product_old:name>* <product_new:name>*`\nExample: `$update_name agua water`")
     async def update_name(self, ctx, val_old: str, val_new: str):
         val_old = util.translate(val_old, 'es').lower()
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val_old}';")
@@ -68,7 +68,7 @@ class Manage(helper.Helper, commands.Cog):
             await ctx.send(embed= util.fail("Error, el producto no existe."))
 
     @is_bartender()
-    @commands.command()
+    @commands.command(help="Usage: `$update_category <product>* <category>*`\nExample: `$update_category agua 'con alcohol'`")
     async def update_category(self, ctx, val: str, cat: str):
         val = util.translate(val, src='en').lower()
         result = await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val}';")
@@ -89,7 +89,7 @@ class Manage(helper.Helper, commands.Cog):
        
     
     @is_bartender()
-    @commands.command()
+    @commands.command(help="Usage: `$delete <img_id>*`\nExample: `$delete 1007`")
     async def delete(self, ctx, val: int):
         val = util.translate(val, src='en')
         result = await self.read(ctx, f"SELECT * FROM imagenes WHERE id = '{int(val)}';")
@@ -102,7 +102,7 @@ class Manage(helper.Helper, commands.Cog):
             await ctx.send(embed= util.fail(f"Error al eliminar la imagen con id: {int(val)}."))
 
     @is_bartender()
-    @commands.command()
+    @commands.command(help="Usage: `$clear <product>*`\nExample: `$clear agua`")
     async def clear(self, ctx, val: str):
         val = util.translate(val, src='en').lower()
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val}';"))[3:-4]
@@ -115,7 +115,7 @@ class Manage(helper.Helper, commands.Cog):
             await ctx.send(embed= util.fail("Error al eliminar el producto."))
 
     @is_bartender()
-    @commands.command()
+    @commands.command(help="Usage: `$select <product>*`\nExample: `$select agua`")
     async def select(self, ctx, val: str):
         val = util.translate(val, src='en').lower()
         result = str(await self.read(ctx, f"SELECT nombre FROM productos WHERE nombre = '{val}';"))[3:-4]

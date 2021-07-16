@@ -9,14 +9,29 @@ class BotHelpCommand(commands.HelpCommand):
         super().__init__()
     
     async def send_bot_help(self, mapping):
+        embed = discord.Embed(
+            title= "Help Menu",
+            colour= int("3861FB",16)
+        )
         for cog in mapping:
-            await self.get_destination().send(f'{cog.qualified_name}: {[command.name for command in mapping[cog]]}')
+            if cog != None:
+                lista = [command.name for command in mapping[cog]]
+                value = ''
+                for cmd in lista:
+                    value += (f" + {cmd}\n")
+                embed.add_field(name= str(cog.qualified_name).capitalize(), value= value, inline='false')
+        await self.get_destination().send(embed= embed)
 
     async def send_cog_help(self, cog):
         await self.get_destination().send(f'{cog.cualified_name}: {[command.name for command in cog.get_command()]}')
     
     async def send_command_help(self, command):
-        await self.get_destination().send(command.name)
+        embed = discord.Embed(
+            title= "Command: " + str(command.name).capitalize(),
+            description= command.help,
+            colour= int("3861FB",16)
+        )
+        await self.get_destination().send(embed= embed)
 
     async def send_group_help(self, group):
         await self.get_destination().send(f'{group.name}: {[command.name for index, command in enumerate(group.commands)]}')

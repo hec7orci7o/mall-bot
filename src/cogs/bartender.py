@@ -13,7 +13,7 @@ class Bartender(helper.Helper, commands.Cog):
         self.bot = bot
         DiscordComponents(self.bot)
 
-    @commands.command(name = 'order')
+    @commands.command(name = 'order', help="Usage: `$order <product>*`\nExample: `$order agua`")
     async def get_product(self, ctx, val):
         val_q = util.translate(val, src='en', dest='es')
         result = await self.read(ctx, f"SELECT * FROM productos WHERE nombre = '{val_q.lower()}';")
@@ -126,7 +126,7 @@ class Bartender(helper.Helper, commands.Cog):
         await self.get_product(ctx, interaction.component[0].label)
         
 
-    @commands.command()
+    @commands.command(help="Usage: `$carta`\nExample: `$carta`")
     async def carta(self, ctx):
         emojis = ["🥛","🍺","🥩","🍣","🍨","🥜","🍭"]
         menu = [(emojis[0],"sin alcohol"),(emojis[1],"con alcohol"),(emojis[2],"carnes"),(emojis[3],"pescados"),(emojis[4],"postres"),(emojis[5],"tapas"),(emojis[6],"chuches")]

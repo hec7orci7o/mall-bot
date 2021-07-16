@@ -14,7 +14,7 @@ mall bot is a bar-based discord bot that serves a variety of bizarre products
 ### Client - Commands()
 - [x] Order a product `$order 'name'`
 - [x] Show the menu `$carta`
-- [ ] Help commands
+- [x] Help commands
 
 ---
 
