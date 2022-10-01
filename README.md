@@ -63,7 +63,7 @@ mall bot is a bar-based discord bot that serves a variety of bizarre products
 #### ENV VARIABLES - Both methods:
 
 Al crear la bbdd con `ClearDB MySQL` se crea otra env var que aparece con el nombre de: `CLEARDB_DATABASE_URL`, esta variable de entorno es opcional pero de ella se extraeran algunas de las siguientes.
-`CLEARDB_DATABASE_URL` = mysql://`USER`:`PASS`@`HOST`/`DATABASE`?reconnect=true
+`DB_DATABASE_URL` = mysql://`USER`:`PASS`@`HOST`/`DATABASE`?reconnect=true
 * DB-Host: `HOST`
 * DB-Name: `DATABASE`
 * DB-User: `USER`
